@@ -1,5 +1,16 @@
-## 🌟 Datacapsule 🌟
+<h1 align="center">🌟 Datacapsule 🌟</h1>
 **Datacapsule是一个基于知识图谱的多路召回解决方案，旨在通过多路召回技术，实现精准的知识检索。该解决方案涵盖了检索系统、实体关系抽取、实体属性抽取、实体链接、结构化数据库构建以及问答系统等多个功能模块，为信息检索和应用提供了强大的支持。**
+
+<div style="margin-top: 20px" align="center">
+  <img src="https://img.shields.io/badge/解决方案-red" />
+  <img src="https://img.shields.io/badge/免费-blue" />
+  <img src="https://img.shields.io/badge/Python-yellow" />
+  <img src="https://img.shields.io/badge/JavaScript-orange" />
+  <img src="https://img.shields.io/badge/TypeScript-blue" />
+  <br />
+  <img src="https://img.shields.io/badge/English-lightgrey" />
+  <img src="https://img.shields.io/badge/简体中文-lightgrey" />
+</div>
 
 # 背景
 知识图谱的多路召回技术是一种在信息检索领域中广泛使用的技术，它通过构建一个包含丰富实体和关系的图形数据库，使得用户可以通过多种方式（如关键字、实体链接等）来查询相关信息。这种方法不仅可以提高信息检索的效率，还可以帮助用户更好地理解和利用数据中的复杂关系。
@@ -730,7 +741,7 @@ cp your_full_dataset.json backend/docs/demo130.json
 
 **项目鸣谢**：十分感谢百度飞桨AI技术生态部：梦姐、楠哥和张翔、新飞同学对本项目的大力支持与帮助！
 
-**项目核心贡献者**：龙正鹏、罗子杰
+**项目核心贡献者**：Loukie7、Alex—鹏哥
 
 对项目感兴趣的同学可以扫码添加好友，后续会成立产品交流社群
 
