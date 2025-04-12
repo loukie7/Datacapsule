@@ -1,7 +1,10 @@
 <h1 align="center">🌟 Datacapsule 🌟</h1>
-**Datacapsule是一个基于知识图谱的多路召回解决方案，旨在通过多路召回技术，实现精准的知识检索。该解决方案涵盖了检索系统、实体关系抽取、实体属性抽取、实体链接、结构化数据库构建以及问答系统等多个功能模块，为信息检索和应用提供了强大的支持。**
 
-<div style="margin-top: 20px" align="center">
+Datacapsule是一个基于知识图谱的多路召回解决方案，旨在通过多路召回技术，实现精准的知识检索。该解决方案涵盖了检索系统、实体关系抽取、实体属性抽取、实体链接、结构化数据库构建以及问答系统等多个功能模块，为信息检索和应用提供了强大的支持。
+
+<br>
+
+<div align="center">
   <img src="https://img.shields.io/badge/解决方案-red" />
   <img src="https://img.shields.io/badge/免费-blue" />
   <img src="https://img.shields.io/badge/Python-yellow" />
