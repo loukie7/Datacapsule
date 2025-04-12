@@ -1,12 +1,12 @@
 <h1 align="center">🌟 Datacapsule 🌟</h1>
 
-Datacapsule是一个基于知识图谱的多路召回解决方案，旨在通过多路召回技术，实现精准的知识检索。该解决方案涵盖了检索系统、实体关系抽取、实体属性抽取、实体链接、结构化数据库构建以及问答系统等多个功能模块，为信息检索和应用提供了强大的支持。
+Datacapsule is a knowledge graph-based multi-path retrieval solution designed to achieve precise knowledge retrieval through multi-path retrieval technology. This solution encompasses multiple functional modules, including retrieval systems, entity relationship extraction, entity attribute extraction, entity linking, structured database construction, and question answering systems, providing powerful support for information retrieval and applications.
 
 <br>
 
 <div align="center">
-  <img src="https://img.shields.io/badge/解决方案-red" />
-  <img src="https://img.shields.io/badge/免费-blue" />
+  <img src="https://img.shields.io/badge/Solution-red" />
+  <img src="https://img.shields.io/badge/Free-blue" />
   <img src="https://img.shields.io/badge/Python-yellow" />
   <img src="https://img.shields.io/badge/JavaScript-orange" />
   <img src="https://img.shields.io/badge/TypeScript-blue" />
@@ -15,439 +15,431 @@ Datacapsule是一个基于知识图谱的多路召回解决方案，旨在通过
   <img src="https://img.shields.io/badge/简体中文-lightgrey" />
 </div>
 
-# 背景
-知识图谱的多路召回技术是一种在信息检索领域中广泛使用的技术，它通过构建一个包含丰富实体和关系的图形数据库，使得用户可以通过多种方式（如关键字、实体链接等）来查询相关信息。这种方法不仅可以提高信息检索的效率，还可以帮助用户更好地理解和利用数据中的复杂关系。
 
-但是传统知识图谱构建的速度和效率有限，因此需要一种更高效的构建图谱方法，同时基于图谱的检索的效率也存在问题，因此，我们提出了一种基于知识图谱的多路召回技术解决方案，旨在提高构建效率并优化检索效果。
-对用户的问题进行深入理解，首先判断用户问题的实体中是否在图谱中，如果不在直接通过向量检索得到答案。
+# Background
+Knowledge graph multi-path retrieval technology is widely used in the field of information retrieval. By constructing a graph database containing rich entities and relationships, it allows users to query relevant information through various methods (such as keywords, entity linking, etc.). This approach not only improves the efficiency of information retrieval but also helps users better understand and utilize complex relationships in the data.
 
-如果在实体中，在判断用户问题的种类，如：实体查询：如"什么是台湾盲鳗？"；关系查询：如"台湾盲鳗和蒲氏黏盲鳗有什么关系？"；属性查询：如"蒲氏黏盲鳗的生活习性是什么？"；统计查询：如"盲鳗科有多少种？"。实体查询、关系查询、属性查询通过图结构检索召回；统计查询通过结构化检索召回
+However, traditional knowledge graph construction has limited speed and efficiency, necessitating a more efficient method for graph construction. At the same time, there are also issues with the efficiency of graph-based retrieval. Therefore, we propose a knowledge graph-based multi-path retrieval technology solution aimed at improving construction efficiency and optimizing retrieval results.
+The system conducts deep understanding of user questions, first determining whether the entities in the user's question exist in the graph. If not, answers are directly obtained through vector retrieval.
 
+If the entity exists in the graph, the system then determines the type of user question, such as: entity query (e.g., "What is the Taiwan hagfish?"); relationship query (e.g., "What is the relationship between the Taiwan hagfish and the Eptatretus stoutii?"); attribute query (e.g., "What are the living habits of the Eptatretus stoutii?"); statistical query (e.g., "How many species are in the hagfish family?"). Entity queries, relationship queries, and attribute queries are retrieved through graph structure retrieval; statistical queries are retrieved through structured retrieval. 
 
-# 主要功能介绍
+# Main Features
 
-1. **功能设计图**：
-     ![功能设计图](./images/function-diagram.png)
+1. **Function Design Diagram**:
+     ![Function Design Diagram](./images/function-diagram.png)
 
-2. **项目文件结构概要**：
+2. **Project Structure Overview**:
 
-- backend/（后端服务目录）
-  - dspy_program/（DSPy模型及程序目录）
-    - retrieval_demo_18.json（小型示例数据集）
-    - retrieval_demo_130.json（完整规模数据集）
-    - optimized_program.pkl（优化后的DSPy程序）
-    - signature.py（DSPy签名定义文件）
-    - examples/（训练示例数据）
-  - graph_data_new/（知识图谱数据目录）
-    - knowledge_graph-1.html（知识图谱可视化文件）
-    - knowledge_graph-1.graphml（知识图谱数据文件）
-    - vectors/（向量数据存储目录）
-      - bio_vectors.json（生物实体向量数据）
-      - relation_vectors.json（关系向量数据）
-  - tools/（工具类模块目录）
-    - entity_extraction.py（实体抽取工具）
-    - entity_extraction_db.py（结构化数据库构建工具）
-  - .dspy_cache/（DSPy缓存目录）
-  - app.py（主应用入口）
-  - dspy_evaluation.py（评估模块）
-  - dspy_inference.py（推理模块）
-  - dspy_query_db.py（数据库查询模块）
-  - nanovector_db.py（向量数据库实现）
-  - react_tools.py（图谱查询与向量检索工具）
-  - requirements.txt（依赖包列表）
-  - .env（环境配置文件）
+- backend/ (Backend service directory)
+  - dspy_program/ (DSPy models and programs directory)
+    - retrieval_demo_18.json (Small sample dataset)
+    - retrieval_demo_130.json (Full-scale dataset)
+    - optimized_program.pkl (Optimized DSPy program)
+    - signature.py (DSPy signature definition file)
+    - examples/ (Training example data)
+  - graph_data_new/ (Knowledge graph data directory)
+    - knowledge_graph-1.html (Knowledge graph visualization file)
+    - knowledge_graph-1.graphml (Knowledge graph data file)
+    - vectors/ (Vector data storage directory)
+      - bio_vectors.json (Biological entity vector data)
+      - relation_vectors.json (Relationship vector data)
+  - tools/ (Tool module directory)
+    - entity_extraction.py (Entity extraction tool)
+    - entity_extraction_db.py (Structured database construction tool)
+  - .dspy_cache/ (DSPy cache directory)
+  - app.py (Main application entry)
+  - dspy_evaluation.py (Evaluation module)
+  - dspy_inference.py (Inference module)
+  - dspy_query_db.py (Database query module)
+  - nanovector_db.py (Vector database implementation)
+  - react_tools.py (Graph query and vector retrieval tools)
+  - requirements.txt (Dependency list)
+  - .env (Environment configuration file)
 
-- frontend/（前端服务目录）
-  - src/（源代码目录）
-    - components/（组件目录）
-      - Chat/（聊天相关组件）
-      - Graph/（知识图谱展示组件）
-      - UI/（界面元素组件）
-    - hooks/（React钩子函数）
-    - services/（服务调用模块）
-    - App.tsx（应用主组件）
-    - main.tsx（入口文件）
-  - public/（静态资源目录）
-    - images/（图片资源）
-  - package.json（项目配置和依赖）
-  - vite.config.ts（Vite配置文件）
-  - tailwind.config.js（TailwindCSS配置）
-  - .env.example（环境变量示例）
+- frontend/ (Frontend service directory)
+  - src/ (Source code directory)
+    - components/ (Components directory)
+      - Chat/ (Chat related components)
+      - Graph/ (Knowledge graph display components)
+      - UI/ (UI elements components)
+    - hooks/ (React hook functions)
+    - services/ (Service call modules)
+    - App.tsx (Main application component)
+    - main.tsx (Entry file)
+  - public/ (Static resource directory)
+    - images/ (Image resources)
+  - package.json (Project configuration and dependencies)
+  - vite.config.ts (Vite configuration file)
+  - tailwind.config.js (TailwindCSS configuration)
+  - .env.example (Environment variable example)
 
-3. **知识图谱与结构化数据库构建**：基于dspy作为意图识别方法去处理实体抽取，构建图谱信息，对应`entity_extraction.py`模块，将构建的图谱信息抽取为结构化信息存储进数据库中，对应`entity_extraction_db.py`模块。
+3. **Knowledge Graph and Structured Database Construction**: Using DSPy as an intent recognition method to process entity extraction and build graph information, corresponding to the `entity_extraction.py` module, extracting the built graph information into structured information and storing it in a database, corresponding to the `entity_extraction_db.py` module.
 
-4. **知识图谱存储与管理**：基于 NetworkX 实现的知识图谱存储和管理功能，支持实体关系的动态构建和查询，对应 `react_tools.py` 中的 `ReActTools` 模块。
+4. **Knowledge Graph Storage and Management**: Knowledge graph storage and management functionality based on NetworkX, supporting dynamic construction and querying of entity relationships, corresponding to the `ReActTools` module in `react_tools.py`.
 
-5. **向量数据库检索**：基于 NanoVector 实现的轻量级向量数据库，支持高效的语义相似度检索，对应 `nanovector_db.py` 中的 `NanoVectorDB` 模块。
+5. **Vector Database Retrieval**: Lightweight vector database based on NanoVector, supporting efficient semantic similarity retrieval, corresponding to the `NanoVectorDB` module in `nanovector_db.py`.
 
-6. **基于图谱的多路召回方法**：
+6. **Graph-based Multi-path Retrieval Method**:
 
-   - 基于 Chain of Thought 的推理系统
-   - 支持多轮对话的上下文理解
-   - 形成了一个完整的推理和查询系统
-      `dspy_inference.py`  整合各种检索方式；提供统一的查询接口
-      `dspy_query_db.py`  处理结构化数据查询
-      `react_tools.py`  整合向量检索和图检索，`ReActTools`类负责图结构检索，`GraphVectorizer`类负责向量检索，调用 `NanoVectordb.py` 的功能
-      `nanovector_db.py`  封装了NanoVector库，提供了向量数据库的查询、存储和向量相似度计算功能
-      `dspy_evaluation.py`  确保推理质量和模型优化
+   - Chain of Thought-based reasoning system
+   - Multi-turn dialogue context understanding
+   - Forms a complete reasoning and querying system
+      `dspy_inference.py` integrates various retrieval methods; provides a unified query interface
+      `dspy_query_db.py` handles structured data queries
+      `react_tools.py` integrates vector retrieval and graph retrieval, where the `ReActTools` class is responsible for graph structure retrieval, and the `GraphVectorizer` class is responsible for vector retrieval, calling the functionality of `NanoVectordb.py`
+      `nanovector_db.py` encapsulates the NanoVector library, providing vector database querying, storage, and vector similarity calculation functions
+      `dspy_evaluation.py` ensures reasoning quality and model optimization
 
-   系统协同工作流程：
-   1. 用户发起查询 → `dspy_inference.py`
-   - 接收用户问题
-   - 负责整体推理流程控制
-   - 判断问题中的实体是否在知识图谱中：
-     * 不在图谱中：直接使用向量检索获取答案
-     * 在图谱中：进一步判断问题类型
-   - 问题类型判断和对应的检索策略：
-     * 实体查询（使用图结构检索） 
-       例如："什么是台湾盲鳗？"
-     * 关系查询（使用图结构检索）
-       例如："台湾盲鳗和蒲氏黏盲鳗有什么关系？"
-     * 属性查询（使用图结构检索）
-       例如："蒲氏黏盲鳗的生活习性是什么？"
-     * 统计查询（使用结构化检索）
-       例如："虎鲨目的生物有多少种？"
+   System Collaborative Workflow:
+   1. User initiates a query → `dspy_inference.py`
+   - Receives the user's question
+   - Responsible for overall inference process control
+   - Determines whether entities in the question exist in the knowledge graph:
+     * If not in the graph: directly uses vector retrieval to get answers
+     * If in the graph: further determines the question type
+   - Question type determination and corresponding retrieval strategies:
+     * Entity query (using graph structure retrieval) 
+       Example: "What is the Taiwan hagfish?"
+     * Relationship query (using graph structure retrieval)
+       Example: "What is the relationship between the Taiwan hagfish and the Eptatretus stoutii?"
+     * Attribute query (using graph structure retrieval)
+       Example: "What are the living habits of the Eptatretus stoutii?"
+     * Statistical query (using structured retrieval)
+       Example: "How many species are there in the order Hexanchiformes?"
 
-   2. 多路检索阶段：
-      a) 向量检索路径：
-         `dspy_inference.py → react_tools.py (GraphVectorizer类) → nanovector_db.py`
-         - 将问题转换为向量
-         - 计算向量相似度
-         - 返回相关实体
-            b) 图结构检索路径：
-            `dspy_inference.py → react_tools.py (ReActTools类)`
-         - 基于实体进行图遍历
-         - 查找相关节点和关系
-         - 返回结构化知识
-            c) 结构化检索路径：
-            `dspy_inference.py → dspy_query_db.py`
-         - 将自然语言转换为SQL
-         - 查询结构化数据库
-         - 返回精确匹配结果
-   3. 结果整合与推理：
-      - `dspy_inference.py` 整合多路检索结果
-      - 使用 DSPy 进行推理和答案生成
-      - 生成结构化的回答
-   4. 评估与优化：
+   2. Multi-path Retrieval Phase:
+      a) Vector Retrieval Path:
+         `dspy_inference.py → react_tools.py (GraphVectorizer class) → nanovector_db.py`
+         - Converts questions to vectors
+         - Calculates vector similarity
+         - Returns relevant entities
+      b) Graph Structure Retrieval Path:
+         `dspy_inference.py → react_tools.py (ReActTools class)`
+         - Performs graph traversal based on entities
+         - Finds related nodes and relationships
+         - Returns structured knowledge
+      c) Structured Retrieval Path:
+         `dspy_inference.py → dspy_query_db.py`
+         - Converts natural language to SQL
+         - Queries structured database
+         - Returns exact matching results
+   3. Result Integration and Reasoning:
+      - `dspy_inference.py` integrates multi-path retrieval results
+      - Uses DSPy for reasoning and answer generation
+      - Generates structured responses
+   4. Evaluation and Optimization:
       `dspy_evaluation.py`
-      - 评估答案质量
-      - 收集用户反馈
-      - 用于模型优化
-      - 更新优化器数据
-   5. 返回结果给用户：
-      - 流式返回答案
-      - 保存交互记录
-      - 更新系统状态
+      - Evaluates answer quality
+      - Collects user feedback
+      - Used for model optimization
+      - Updates optimizer data
+   5. Returns Results to User:
+      - Streams answers back
+      - Saves interaction records
+      - Updates system status
 
-   对应 `dspy_inference.py` 、 `dspy_evaluation.py` 和 `dspy_query_db.py` 模块。
+   Corresponding to the `dspy_inference.py`, `dspy_evaluation.py`, and `dspy_query_db.py` modules.
 
-7. **实时通信与状态同步**：
-   - WebSocket 实现的实时消息推送
-   - 支持流式输出的对话响应
-   - 优化器状态的实时反馈
-   对应 `broadcast.py` 和 `app.py` 中的 WebSocket 实现。
+7. **Real-time Communication and State Synchronization**:
+   - Real-time message pushing implemented with WebSocket
+   - Supports streaming conversation responses
+   - Real-time feedback of optimizer status
+   Corresponding to the WebSocket implementation in `broadcast.py` and `app.py`.
 
-8. **模型优化器**：
-   - 支持基于用户反馈的模型优化
-   - 版本管理和回滚功能
-   - 优化器过程可视化
-   对应 `dspy_evaluation.py` 中的评估优化模块。
+8. **Model Optimizer**:
+   - Supports model optimization based on user feedback
+   - Version management and rollback functionality
+   - Visualization of optimizer processes
+   Corresponding to the evaluation optimization module in `dspy_evaluation.py`.
 
-9. **数据库管理系统**：
-   - SQLite 存储用户交互记录
-   - 支持向量数据的批量处理
-   - 数据版本控制
-   对应 `dspy_query_db.py` 中的数据库管理功能。
+9. **Database Management System**:
+   - SQLite storage for user interaction records
+   - Supports batch processing of vector data
+   - Data version control
+   Corresponding to the database management functionality in `dspy_query_db.py`.
 
-10. **前端交互界面**：
+10. **Frontend Interactive Interface**:
+   - Modern interface based on React 18 + Vite
+   - Real-time dialogue window
+   - Collection of user Q&A pairs
+   - Reasoning process display
+   - Optimization progress display
+   Corresponding to the implementation in the `frontend` directory.
 
-   - 基于 React 18 + Vite 的现代化界面
-   - 实时对话窗口
-   - 用户问答对收集
-   - 推理过程展示
-   - 优化进度展示
-      对应前端 `frontend` 目录的实现。
+11. **System Monitoring and Logging**:
+   - Hierarchical logging system based on loguru
+   - Performance monitoring and error tracking
+   - API call statistics
+   Corresponding to the logging implementations in various modules.
 
-11. **系统监控与日志**：
-   - 基于 loguru 的分级日志系统
-   - 性能监控和错误追踪
-   - API 调用统计
-      对应各模块中的日志记录实现。
+12. **Environment Configuration Management**:
+    - Support for multiple LLM model configurations
+    - Flexible environment variable management
+    - Multi-environment deployment support
+    Corresponding to the configuration management in `.env` and `.env.example`.
 
-12. **环境配置管理**：
-    - 支持多种 LLM 模型配置
-    - 灵活的环境变量管理
-    - 多环境部署支持
-    对应 `.env` 和 `.env.example` 的配置管理。
+# Technical Framework
+## **Frontend Technology Stack**
+- Development Language: JavaScript+TypeScript
+- Frontend Framework: React 18 + Vite
+- UI Framework: TailwindCSS
+- Development Tools:
+  * Build Tool: Vite
+- Real-time Communication: WebSocket client
 
+## **Backend Technology Stack**
+- Development Language: Python (Recommended version: 3.8+)
+- Web Framework: FastAPI
+- Databases:
+  * Structured Data: SQLite
+  * Vector Database: NanoVector (Lightweight vector database)
+  * Graph Structure Information Storage: NetworkX (For knowledge graph storage)
+- Knowledge Extraction:
+  * Entity & Relationship Extraction: DSPy + CoT (Chain of Thought)
+- AI Models:
+  * Embedding Model: See configuration in backend/.env.example
+  * Large Language Model: Supports OpenAI/DeepSeek, etc., see configuration in backend/.env.example
+- Development Tools:
+  * Dependency Management: pip
+  * Environment Management: python-dotenv
+  * Logging System: loguru
 
-# 技术框架
-## **前端技术栈**
-- 开发语言：JavaScript+TypeScript
-- 前端框架：React 18 + Vite
-- UI 框架：TailwindCSS
-- 开发工具：
-  * 构建工具：Vite
-- 实时通信：WebSocket 客户端
+## **System Architecture**
+- Frontend-backend separation architecture
+- WebSocket real-time communication
+- Vector retrieval + Graph retrieval + text2sql hybrid recall
+- DSPy intent understanding and reasoning
 
-## **后端技术栈**
-- 开发语言：Python (推荐版本：3.8+)
-- Web 框架：FastAPI
-- 数据库：
-  * 结构化数据：SQLite
-  * 向量数据库：NanoVector (轻量级向量数据库)
-  * 图结构信息存储：NetworkX (用于知识图谱存储)
-- 知识抽取：
-  * 实体&关系抽取：DSPy + CoT (Chain of Thought)
-- AI 模型：
-  * Embedding 模型：支持 配置见 backend/.env.example
-  * 大语言模型：支持 OpenAI/DeepSeek等，配置见 backend/.env.example
-- 开发工具：
-  * 依赖管理：pip
-  * 环境管理：python-dotenv
-  * 日志系统：loguru
-
-## **系统架构**
-- 前后端分离架构
-- WebSocket 实时通信
-- 向量检索 + 图检索 + text2sql混合召回
-- DSPy 意图理解和推理
-
-**本项目主要关注解决方案的实现，部分代码由cursor生成提效**
+**This project focuses primarily on the implementation of the solution, with some code generated by cursor for efficiency**
 
 
-# 项目依赖
-详情参考requirements.txt 
+# Project Dependencies
+See requirements.txt for details 
 
+# Quick Start
 
-# 快速开始
-
-## 1. 安装依赖
+## 1. Install Dependencies
 ```bash
 pip install -r backend/requirements.txt
 ```
-注意：如果安装时报错，可能是requirements.txt文件格式问题，建议：
-- 复制requirements.txt内容到新文件
-- 检查并删除可能的特殊字符
-- 使用新创建的依赖文件进行安装
+Note: If you encounter errors during installation, it might be due to formatting issues in the requirements.txt file. Suggestions:
+- Copy the contents of requirements.txt to a new file
+- Check for and remove any special characters
+- Use the newly created dependency file for installation
 
-## 2. 配置环境变量
-在backend目录下创建.env文件，并按照.env.example模板进行配置。主要配置项如下：
+## 2. Configure Environment Variables
+Create a .env file in the backend directory based on the .env.example template. The main configuration items are as follows:
 
-a) 大语言模型配置：
-    本项目使用DSPy进行意图识别，需要配置两个独立的模型：
-    Dspy官方中文文档信息：https://www.aidoczh.com/dspy/
-    1. 问答/推理模型：用于处理用户查询和推理
-    2. 优化模型：用于模型优化
-    两个模型可以使用相同或不同的配置，支持OpenAI-SDK格式的模型：
-    - OpenAI API系列：GPT-3.5/4/4o
-    - DeepSeek系列：deepseek-chat/coder
-    - 阿里云系列：Qwen/通义千问
-    - 百度文心系列：ERNIE-Bot
-    - Ollama本地部署
-    - HuggingFace部署
-    - VLLM高性能部署
+a) Large Language Model Configuration:
+    This project uses DSPy for intent recognition and requires configuration of two separate models:
+    DSPy official documentation: https://www.aidoczh.com/dspy/
+    1. Q&A/Inference Model: Used for processing user queries and reasoning
+    2. Optimization Model: Used for model optimization
+    Both models can use the same or different configurations, supporting OpenAI-SDK format models:
+    - OpenAI API series: GPT-3.5/4/4o
+    - DeepSeek series: deepseek-chat/coder
+    - Alibaba Cloud series: Qwen
+    - Baidu ERNIE series: ERNIE-Bot
+    - Ollama local deployment
+    - HuggingFace deployment
+    - VLLM high-performance deployment
 
 
-    # 问答/推理模型配置（用于处理用户查询和推理）
-    LLM_TYPE="deepseek"                # 模型类型(可替换为其他模型)
-    API_KEY="sk-xxxxxxxxxxxxxxxx"             # API密钥
-    BASE_URL="xxxxxxxxxxxxxxxxxxxxx"  # API基础地址
-    LLM_MODEL="deepseek-chat"          # 具体的模型名称
+    # Q&A/Inference Model Configuration (for processing user queries and reasoning)
+    LLM_TYPE="deepseek"                # Model type (can be replaced with other models)
+    API_KEY="sk-xxxxxxxxxxxxxxxx"             # API key
+    BASE_URL="xxxxxxxxxxxxxxxxxxxxx"  # API base URL
+    LLM_MODEL="deepseek-chat"          # Specific model name
     
-    # Ollama配置（本地部署方案，适合离线环境）
-    # LLM_TYPE="ollama_chat"           # 设置为使用Ollama本地模型
-    # API_KEY=""                       # Ollama本地部署不需要API密钥
-    # BASE_URL="http://localhost:11434" # Ollama服务的本地地址
-    # LLM_MODEL="xxxxxxxxxxxxx"           # 使用的具体模型
+    # Ollama Configuration (Local deployment solution, suitable for offline environments)
+    # LLM_TYPE="ollama_chat"           # Set to use Ollama local model
+    # API_KEY=""                       # Ollama local deployment does not require an API key
+    # BASE_URL="http://localhost:11434" # Local address of Ollama service
+    # LLM_MODEL="xxxxxxxxxxxxx"           # Specific model to use
     
-    # 优化模型配置（用于模型后优化,如果不优化可以忽略）
-    Train_LLM_TYPE="deepseek"            # 优化模型类型(可替换为其他模型)
-    Train_LLM_MODEL="deepseek-chat" # 优化使用的具体模型
-    Train_OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxx"  # 优化模型的API密钥
-    Train_OPENAI_BASE_URL="xxxxxxxxxxxxxxxxxxxxx"  # 优化模型的API地址
+    # Optimization Model Configuration (for model optimization, can be ignored if not optimizing)
+    Train_LLM_TYPE="deepseek"            # Optimization model type (can be replaced with other models)
+    Train_LLM_MODEL="deepseek-chat" # Specific model used for optimization
+    Train_OPENAI_API_KEY="xxxxxxxxxxxxxxxxxxxxx"  # API key for the optimization model
+    Train_OPENAI_BASE_URL="xxxxxxxxxxxxxxxxxxxxx"  # API address for the optimization model
 
-b) 系统环境配置（核心路径和参数设置）：
+b) System Environment Configuration (Core paths and parameter settings):
    ```
-   RAG_DIR="graph_data_new"              # 知识图谱数据存储目录
-   LOG_LEVEL="DEBUG"                     # 日志级别（可选：DEBUG, INFO, WARNING, ERROR）
-   DATABASE_URL="sqlite:///.dbs/interactions.db"  # 交互数据库路径
-   SPECIES_DB_URL="./.dbs/marine_species.db"     # 物种数据库路径
-   ```
-
-c) 向量检索配置（影响检索效果的关键参数）：
-   ```
-   VECTOR_SEARCH_TOP_K=3                 # 向量检索返回的最大结果数
-   BETTER_THAN_THRESHOLD=0.7             # 相似度筛选阈值（0-1之间）
-   GRAPHML_DIR="graph_entity_relation_detailed.graphml"  # 知识图谱存储文件
+   RAG_DIR="graph_data_new"              # Knowledge graph data storage directory
+   LOG_LEVEL="DEBUG"                     # Log level (Options: DEBUG, INFO, WARNING, ERROR)
+   DATABASE_URL="sqlite:///.dbs/interactions.db"  # Interaction database path
+   SPECIES_DB_URL="./.dbs/marine_species.db"     # Species database path
    ```
 
-d) Embedding模型配置（文本向量化参数）：
+c) Vector Retrieval Configuration (Key parameters affecting retrieval performance):
    ```
-   MAX_BATCH_SIZE=100                    # 批处理大小，影响处理速度
-   EMBEDDING_MAX_TOKEN_SIZE=8192         # 单次处理的最大token数
-   EMBEDDING_DIM=1024                    # 向量维度
-   EMBEDDING_MODEL="xxxxxxxxxxxxxxx"   # 使用的embedding模型
+   VECTOR_SEARCH_TOP_K=3                 # Maximum number of results returned by vector retrieval
+   BETTER_THAN_THRESHOLD=0.7             # Similarity filtering threshold (between 0-1)
+   GRAPHML_DIR="graph_entity_relation_detailed.graphml"  # Knowledge graph storage file
+   ```
+
+d) Embedding Model Configuration (Text vectorization parameters):
+   ```
+   MAX_BATCH_SIZE=100                    # Batch size, affects processing speed
+   EMBEDDING_MAX_TOKEN_SIZE=8192         # Maximum number of tokens per process
+   EMBEDDING_DIM=1024                    # Vector dimension
+   EMBEDDING_MODEL="xxxxxxxxxxxxxxx"   # Embedding model used
    EMBEDDING_MODEL_BASE_URL="xxxxxxxxxxxxxxxxxxxxx"
-   EMBEDDING_MODEL_API_KEY="your-embedding-api-key"  # embedding服务的API密钥
+   EMBEDDING_MODEL_API_KEY="your-embedding-api-key"  # API key for the embedding service
    ```
 
-重要注意事项：
-- 所有标注为 "your-xxx-api-key" 的配置项必须替换为您申请的实际API密钥
-- API密钥可以从相应的服务提供商平台获取：
-- 请确保在运行程序前完成所有必要的配置
-- 配置文件中的路径可以根据实际部署环境进行调整
-- 建议在正式部署前在测试环境中验证配置的正确性
+Important Notes:
+- All items marked as "your-xxx-api-key" must be replaced with your actual API keys
+- API keys can be obtained from the respective service provider platforms
+- Please ensure all necessary configurations are completed before running the program
+- Paths in the configuration file can be adjusted according to your actual deployment environment
+- It is recommended to verify the correctness of the configuration in a test environment before formal deployment
 
-## 3. 运行服务
-## 环境配置
-本项目使用环境变量来配置API和WebSocket地址。
+## 3. Run Services
+## Environment Configuration
+This project uses environment variables to configure API and WebSocket addresses.
 
-### 配置步骤
-1. 复制`.env.example`文件并重命名为`.env`（或`.env.development`、`.env.production`等）
-2. 根据你的环境修改文件中的变量值
+### Configuration Steps
+1. Copy the `.env.example` file and rename it to `.env` (or `.env.development`, `.env.production`, etc.)
+2. Modify the variable values in the file according to your environment
 
-### 可用环境变量
-- `VITE_API_URL`: 后端API地址
-- `VITE_WS_URL`: WebSocket服务地址
+### Available Environment Variables
+- `VITE_API_URL`: Backend API address
+- `VITE_WS_URL`: WebSocket service address
 
-### 启动后端服务
+### Start Backend Service
 ```bash
 cd backend
 python app.py
 ```
-### 启动前端服务
+### Start Frontend Service
 ```bash
 cd frontend 
 npm install
-- 开发环境: `npm run dev` (使用`.env.development`或`.env`中的配置)
-- 生产构建: `npm run build` (使用`.env.production`中的配置)
+- Development environment: `npm run dev` (Uses configuration from `.env.development` or `.env`)
+- Production build: `npm run build` (Uses configuration from `.env.production`)
 ```
-## 4. 数据处理说明
-本项目提供了两种数据处理方式：
-1. 使用内置示例数据（默认方式）
-2. 使用自定义数据：
-   - 使用 tools/entity_extraction.py 进行图数据抽取
-   - 使用 entity_extraction_db.py 进行结构化数据抽取与存储
-   - 处理后的数据将自动存储在配置文件指定的位置：
-     * 图数据：保存在 RAG_DIR 指定目录
-     * 结构化数据：保存在 SPECIES_DB_URL 指定的数据库文件
+## 4. Data Processing Information
+This project provides two data processing methods:
+1. Use built-in example data (default method)
+2. Use custom data:
+   - Use tools/entity_extraction.py for graph data extraction
+   - Use entity_extraction_db.py for structured data extraction and storage
+   - Processed data will be automatically stored in the locations specified in the configuration file:
+     * Graph data: Saved in the directory specified by RAG_DIR
+     * Structured data: Saved in the database file specified by SPECIES_DB_URL 
+
+## 5. Operation Steps
+**Successful startup interface is as follows**:
+![Startup Success Interface](./images/startup-success.jpg)
 
 
-## 5. 运行步骤
-**启动成功后的界面如下**：
-![启动成功界面](./images/startup-success.jpg)
+**Questions with entities not in the graph:**
 
+![Non-Entity Information Screenshot](./images/非实体信息截图.jpg)
 
-**实体不在图谱中的问题：**
+**Additional Explanation**: When the entity in a user's query does not exist in the knowledge graph, the system automatically switches to vector retrieval strategy. The current configuration uses a `top_k=1` parameter, returning only the single result with the highest similarity. This design performs well when handling fuzzy queries within a professional domain, but has limitations when facing queries outside the domain:
 
-![非实体信息截图](./images/非实体信息截图.jpg)
+1. For complex questions requiring multiple information sources, a single result may not be comprehensive
+2. For statistical questions (such as "How many types..."), the system can only answer based on limited context
+3. For non-professional domain questions, there is insufficient background knowledge for accurate responses
 
-**补充说明**：当用户查询的实体不存在于知识图谱中时，系统会自动切换至向量检索策略。当前配置使用 `top_k=1` 参数，仅返回相似度最高的单个结果。这种设计在处理专业领域内的模糊查询时表现良好，但面对领域外查询时存在局限性：
+This limitation is a trade-off in the current system design and can be improved through:
+- Adjusting the `top_k` parameter in `dspy_inference.py` to get more results
+- Implementing intelligent forwarding to general models for non-domain questions
+- Expanding the knowledge graph to cover a wider range of entity information
 
-1. 对于需要综合多个信息源的复杂问题，单一结果可能不够全面
-2. 对于统计类问题（如"有多少种..."），系统只能基于有限上下文回答
-3. 对于非专业领域的问题，缺乏足够的背景知识进行准确响应
+**Questions with entities in the graph:**
 
-此限制是系统当前设计的权衡结果，可通过以下方式改进：
-- 在 `dspy_inference.py` 中调整 `top_k` 参数以获取更多结果
-- 对非领域问题实现智能转发至通用模型
-- 扩展知识图谱覆盖更广泛的实体信息
+- **Entity Query Questions:**
 
-**实体在图谱中的问题：**
+  ![Entity Information Query](./images/实体信息查询.jpg)
 
-- **实体查询问题：**
+- **Relationship Query Questions:**
 
-  ![实体信息查询](./images/实体信息查询.jpg)
+  ![Relationship Information Query](./images/关系信息查询.jpg)
 
-- **关系查询问题：**
+- **Attribute Query Questions:**
 
-  ![关系信息查询](./images/关系信息查询.jpg)
+  ![Attribute Information Query](./images/属性信息查询.jpg)
 
-- **属性查询问题：**
+- **Statistical Query Questions:**
 
-  ![属性信息查询](./images/属性信息查询.jpg)
+  ![Statistical Information Query](./images/统计信息查询.jpg)
 
-- **统计查询问题：**
+  The correctness of the questions can be verified in ~backend/docs/demo130.json
 
-  ![统计信息查询](./images/统计信息查询.jpg)
+- **Knowledge Graph Display:**
 
-  问题的正确性可以去～backend/docs/demo130.json自行验证
+  - Click the link on the homepage to access the knowledge graph information
 
-- **知识图谱展现：**
+- **Building Optimization Samples**:
 
-  - 点击首页link链接即可即可获取知识图谱信息
+  - Manually modify the content in the "Reasoning Process" and "Model Return" sections on the frontend page
+  - Under the current architecture, small sample optimization data (30-50 entries) can achieve some effect
+  - ![Optimization Sample](./images/优化样本.jpg)
 
-- **构建优化样本**：
+- **Optimize Samples:**
 
-  - 人工去修改前端页面中“推理过程”和“模型返回”中的内容
-  - 目前架构下小样本的优化数据（30-50条）能取得一定的效果
-  - ![优化样本](./images/优化样本.jpg)
+  - ![Train All Samples](./images/训练所有样本.jpg) 
 
-- **优化样本：**
+### DSPy Intent Understanding Mechanism
 
-  - ![训练所有样本](./images/训练所有样本.jpg)
+1. **Zero-shot Understanding Capability**:
 
-  
+   - The DSPy framework uses the ReAct (Reasoning+Acting) pattern, allowing large models to understand user intent without pre-training
+   - The system integrates various tool functions through the `ReActModel` class in `dspy_inference.py`
+   - The large model automatically selects the most appropriate tool based on the question semantics, for example:
+     * Entity question: "What is the Taiwan hagfish?" → calls `find_nodes_by_node_type`
+     * Statistical question: "How many species are in the hagfish family?" → calls appropriate counting and query methods
 
+2. **Zero-shot Understanding Implementation Principle**:
 
-
-### DSPy 意图理解机制
-
-1. **零样本理解能力**：
-
-   - DSPy 框架使用 ReAct（Reasoning+Acting）模式，允许大模型在无需预训练的情况下理解用户意图
-   - 系统通过 `dspy_inference.py` 中的 `ReActModel` 类集成了多种工具函数
-   - 大模型根据问题语义自动选择最合适的工具，例如：
-     * 实体问题："什么是台湾盲鳗？" → 调用 `find_nodes_by_node_type`
-     * 统计问题："盲鳗科有多少种？" → 调用适当的计数和查询方法
-
-2. **零样本理解的实现原理**：
-
-   - 在 `dspy_inference.py` 中，ReAct 模块会自动解析每个工具函数的签名和文档字符串：
+   - In `dspy_inference.py`, the ReAct module automatically parses the signature and documentation string of each tool function:
      ```python
-     # dspy_inference.py 中的核心代码
+     # Core code in dspy_inference.py
      self.react = dspy.ReAct(
          DspyInferenceProcessor.MarineBiologyKnowledgeQueryAnswer,
          max_iters = MAX_ITERS,
          tools=[
              processor.find_nodes_by_node_type, 
              processor.get_unique_vector_query_results,
-             # ...其他工具
+             # ...other tools
          ]
      )
      ```
 
-   - 工具函数的详细文档提供了关键上下文，如 `find_nodes_by_node_type` 中的描述：
+   - The detailed documentation of tool functions provides key context, such as the description in `find_nodes_by_node_type`:
      ```python
      def find_nodes_by_node_type(self, start_node, trget_node_type):
          '''
-         此方法会根据传入的节点名称，在图数据中以该节点为起点查找包含指定节点类型的节点列表。
-         start_node 为开始查找的树节点名称，只允许单个节点。
-         trget_node_type 目标节点类型,只允许单个类型名称。
-         返回值为从该节点开始，包含指定属性名的节点数量与节点列表。
-         已知图数据中存在一系列的海洋生物相关信息：
-         1. ⽣物分类学图数据：包括"拉丁学名", "命名年份", "作者", "中文学名"
-         2. ⽣物科属于数据："界", "门", "纲", "目", "科", "属", "种"...
+         This method finds a list of nodes of the specified node type starting from the given node name in the graph data.
+         start_node is the name of the tree node to start searching from, only allowing a single node.
+         trget_node_type is the target node type, only allowing a single type name.
+         The return value is the number and list of nodes with the specified property name starting from that node.
+         Known graph data contains a series of marine biology related information:
+         1. Biological taxonomy graph data: including "Latin scientific name", "naming year", "author", "Chinese scientific name"
+         2. Biological family and genus data: "kingdom", "phylum", "class", "order", "family", "genus", "species"...
          '''
      ```
 
-   - DSPy 内部生成隐式提示，引导模型如何为不同问题选择工具：
-     * 当问题包含"台湾盲鳗是什么"时，模型理解这是查询特定实体的描述
-     * 当问题包含"盲鳗科有多少种"时，模型理解这需要计数操作
+   - DSPy internally generates implicit prompts that guide the model in how to select tools for different questions:
+     * When a question contains "What is the Taiwan hagfish", the model understands this is querying the description of a specific entity
+     * When a question contains "How many species are in the hagfish family", the model understands this requires a counting operation
 
-   - 大模型的思维链能力（在 `react_tools.py` 中体现）让系统能够：
-     * 分析问题中的关键实体和关系
-     * 规划多步检索策略
-     * 根据中间结果调整后续操作
+   - The large model's chain of thought capability (reflected in `react_tools.py`) allows the system to:
+     * Analyze key entities and relationships in the question
+     * Plan multi-step retrieval strategies
+     * Adjust subsequent operations based on intermediate results
 
-   这种零样本理解能力不依赖于预先定义的硬编码规则，而是依托于:
-   1. 函数的清晰命名和文档
-   2. DSPy的提示工程自动化
-   3. 大模型的上下文理解能力
-   4. ReAct框架的推理-行动循环机制
+   This zero-shot understanding capability does not rely on predefined hardcoded rules, but rather on:
+   1. Clear function naming and documentation
+   2. DSPy's prompt engineering automation
+   3. The large model's contextual understanding ability
+   4. The ReAct framework's reasoning-action loop mechanism
 
-3. **工具选择机制**：
+3. **Tool Selection Mechanism**:
    ```python
    self.react = dspy.ReAct(
        DspyInferenceProcessor.MarineBiologyKnowledgeQueryAnswer,
@@ -455,297 +447,296 @@ npm install
        tools=[processor.find_nodes_by_node_type, ...]
    )
    ```
-   - 模型通过思考链（Chain-of-Thought）分析问题特征
-   - 基于问题类型动态选择工具组合
-   - 无需硬编码规则即可处理多种问题类型
+   - The model analyzes question features through Chain-of-Thought
+   - Dynamically selects tool combinations based on question type
+   - Handles multiple question types without hardcoded rules
 
-###  DSPy 优化原理与效果
+###  DSPy Optimization Principles and Effects
 
-1. **优化技术本质**：
-   - DSPy 优化不是传统的参数微调，而是**提示工程自动化**
-   - 系统通过 `dspy_evaluation.py` 中的评估器收集用户反馈数据
-   - 优化过程存储在 `dspy_program` 目录中的程序文件（.pkl 和 .json）
+1. **Optimization Technology Essence**:
+   - DSPy optimization is not traditional parameter fine-tuning, but **prompt engineering automation**
+   - The system collects user feedback data through the evaluator in `dspy_evaluation.py`
+   - The optimization process is stored in program files (.pkl and .json) in the `dspy_program` directory
 
-2. **优化流程**：
+2. **Optimization Process**:
    ```python
-   # app.py 中的优化逻辑
+   # Optimization logic in app.py
    async def run_dspy_optimization(training_data: List[Dict], version: str, ids: List[str]):
-       # 收集优化数据
-       # 构建评估指标
-       # 优化推理程序
-       # 保存优化后的模型
+       # Collect optimization data
+       # Build evaluation metrics
+       # Optimize reasoning program
+       # Save optimized model
    ```
-   - 收集用户提问和反馈数据作为优化样本
-   - 使用 BiologicalRetrievalEvaluation 评估推理质量
-   - 应用多次迭代优化，生成更精确的思考链模板
+   - Collect user questions and feedback data as optimization samples
+   - Use BiologicalRetrievalEvaluation to evaluate reasoning quality
+   - Apply multiple iterations of optimization to generate more precise thinking chain templates
 
-3. **优化效果**：
-   - **意图理解增强**：系统能更准确区分实体查询、关系查询、属性查询和统计查询
-   - **工具选择优化**：模型学会更高效地组合检索工具，减少不必要的检索步骤
-   - **推理模式改进**：通过分析成功案例，系统生成更结构化的推理路径
-   - **领域适应性**：优化后的系统表现出更强的领域特定理解能力，尤其在海洋生物学术语处理上
+3. **Optimization Effects**:
+   - **Intent Understanding Enhancement**: The system can more accurately distinguish between entity queries, relationship queries, attribute queries, and statistical queries
+   - **Tool Selection Optimization**: The model learns to combine retrieval tools more efficiently, reducing unnecessary retrieval steps
+   - **Reasoning Pattern Improvement**: By analyzing successful cases, the system generates more structured reasoning paths
+   - **Domain Adaptability**: The optimized system shows stronger domain-specific understanding capabilities, especially in handling marine biology terminology
 
-4. **版本比较**：
-   - 通过比较 `program_v1.0.1_20250302192606.json` 和 `program_v1.0.3_20250315154834.pkl` 可见优化效果
-   
-   
-   
+4. **Version Comparison**:
+   - The optimization effect can be seen by comparing `program_v1.0.1_20250302192606.json` and `program_v1.0.3_20250315154834.pkl` 
 
-## 6. 交流与问题讨论
-## About data
 
-### 1. 数据源替换
 
-#### 内置数据源替换
 
-本项目包含两个内置示例数据集（`demo18.json`和`demo130.json`），它们结构相同但数据量不同。替换步骤：
+## 6. Communication and Issue Discussion
+## About Data
+
+### 1. Data Source Replacement
+
+#### Built-in Data Source Replacement
+
+This project contains two built-in example datasets (`demo18.json` and `demo130.json`), which share the same structure but differ in data volume. Replacement steps:
 
 ```bash
-# 替换小型测试数据集
+# Replace small test dataset
 cp your_small_dataset.json backend/docs/demo18.json
 
-# 替换完整数据集
+# Replace complete dataset
 cp your_full_dataset.json backend/docs/demo130.json
 ```
 
-两个数据集共享相同的结构和字段，仅在数据量上有区别，方便您进行快速测试和完整训练。
+The two datasets share the same structure and fields, differing only in data volume, convenient for quick testing and complete training.
 
-#### 自定义数据引入
+#### Custom Data Introduction
 
-引入您自己的领域数据需要以下全面调整：
+Introducing your own domain data requires the following comprehensive adjustments:
 
-1. **准备JSON格式数据**
-   - 系统优先支持JSON格式，包含实体、关系和属性字段
+1. **Prepare JSON Format Data**
+   - The system primarily supports JSON format, containing entity, relationship, and attribute fields
 
-2. **实体抽取与图谱构建**
-   - 使用`tools/entity_extraction.py`从JSON中提取实体并构建图谱
-   - 需修改抽取逻辑以适配您的数据结构
-   - 自定义实体类型和关系类型映射
+2. **Entity Extraction and Graph Construction**
+   - Use `tools/entity_extraction.py` to extract entities from JSON and build the graph
+   - Need to modify extraction logic to adapt to your data structure
+   - Customize entity type and relationship type mapping
 
-3. **建立结构化数据库**
-   - 使用`tools/entity_extraction_db.py`创建关系型数据库
-   - 调整数据库表结构设计
-   - 修改字段映射和索引策略
+3. **Establish Structured Database**
+   - Use `tools/entity_extraction_db.py` to create a relational database
+   - Adjust database table structure design
+   - Modify field mapping and indexing strategies
 
-4. **DSPy组件全面调整**
+4. **Comprehensive DSPy Component Adjustment**
 
-   a. `dspy_inference.py`：
-      - 重新定义问题类型和意图分类
-      - 修改`MarineBiologyKnowledgeQueryAnswer`签名类及描述
-      - 调整ReAct工具选择逻辑和参数
-      - 自定义推理流程和决策路径
+   a. `dspy_inference.py`:
+      - Redefine question types and intent classification
+      - Modify the `MarineBiologyKnowledgeQueryAnswer` signature class and description
+      - Adjust ReAct tool selection logic and parameters
+      - Customize reasoning flow and decision paths
 
-   b. `dspy_evaluation.py`：
-      - 重新设计评估指标和权重
-      - 修改`BiologicalRetrievalEvaluation`签名以匹配新领域
-      - 调整评分标准和反馈机制
+   b. `dspy_evaluation.py`:
+      - Redesign evaluation metrics and weights
+      - Modify the `BiologicalRetrievalEvaluation` signature to match the new domain
+      - Adjust scoring standards and feedback mechanisms
 
-   c. `dspy_query_db.py`：
-      - 重构SQL生成逻辑
-      - 调整`NaturalLanguageToSQL`提示
-      - 修改数据库查询和结果格式化
+   c. `dspy_query_db.py`:
+      - Restructure SQL generation logic
+      - Adjust `NaturalLanguageToSQL` prompts
+      - Modify database queries and result formatting
 
-   d. `react_tools.py`：
-      - 重新定义`NODE_HIERARCHY`以匹配新领域的层级关系
-      - 调整图检索算法和路径选择逻辑
-      - 修改向量检索参数和阈值
+   d. `react_tools.py`:
+      - Redefine `NODE_HIERARCHY` to match the hierarchical relationships of the new domain
+      - Adjust graph retrieval algorithms and path selection logic
+      - Modify vector retrieval parameters and thresholds
 
-5. **配置文件调整**
-   - 修改`.env.example`和`.env`中的模型参数
-   - 调整向量检索参数和阈值
-   - 更新数据路径和文件名
+5. **Configuration File Adjustment**
+   - Modify model parameters in `.env.example` and `.env`
+   - Adjust vector retrieval parameters and thresholds
+   - Update data paths and filenames
 
-6. **优化数据准备**
+6. **Optimization Data Preparation**
    
-   - 创建领域特定的示例问答对
-   - 编写标准推理路径作为优化基准
-   - 设计适合新领域的评估样本
+   - Create domain-specific example Q&A pairs
+   - Write standard reasoning paths as optimization benchmarks
+   - Design evaluation samples suitable for the new domain
 
-### 2. 数据场景适配性
+### 2. Data Scenario Adaptability
 
-### 最佳适用场景
-- **有明确标准答案的领域**：如百科知识、产品目录、技术规范等
-- **结构化程度高的数据**：实体关系明确、属性定义清晰的知识库
-- **专业垂直领域**：如本项目示例中的海洋生物学分类系统
+### Best Application Scenarios
+- **Domains with clear standard answers**: Such as encyclopedia knowledge, product catalogs, technical specifications, etc.
+- **Highly structured data**: Knowledge bases with clear entity relationships and well-defined attributes
+- **Professional vertical domains**: Such as the marine biology classification system in this project's example
 
-### 需要额外工作的场景
-- **非量化评估内容**：如论文概要、观点分析等主观内容
-- **需要推理的场景**：需要复杂逻辑推导的问题
-- **多源异构数据**：来自不同格式、不同结构的混合数据
+### Scenarios Requiring Additional Work
+- **Non-quantifiable evaluation content**: Such as paper summaries, opinion analysis, and other subjective content
+- **Scenarios requiring reasoning**: Problems requiring complex logical deduction
+- **Multi-source heterogeneous data**: Mixed data from different formats and structures
 
-在这些场景中，您需要设计自定义评估指标才能有效衡量系统表现。
+In these scenarios, you need to design custom evaluation metrics to effectively measure system performance.
 
-### 3. 数据处理全流程（未来规划）
+### 3. Complete Data Processing Workflow (Future Plans)
 
-数据清洗和切分是我们下一阶段的重点开发方向，将实现以下流程：
+Data cleaning and segmentation are the focus of our next development phase, which will implement the following workflow:
 
-### 数据预处理流程
+### Data Preprocessing Workflow
 
-1. **版面识别转换**
-   - PDF等文档通过版面识别模型转换为结构化Markdown
-   - 关键步骤：自动识别→结构化转换→人工校验
+1. **Layout Recognition and Conversion**
+   - PDF and other documents are converted to structured Markdown through layout recognition models
+   - Key steps: Automatic recognition → Structured conversion → Manual verification
 
-2. **智能内容切分**
-   - 多种切分策略：固定长度、语义分割、页面分割、递归分块
-   - 自适应切分：根据内容特点自动选择最佳切分方式
-   - 切分后进行人工复核确保质量
+2. **Intelligent Content Segmentation**
+   - Multiple segmentation strategies: Fixed length, semantic segmentation, page segmentation, recursive chunking
+   - Adaptive segmentation: Automatically selecting the best segmentation method based on content characteristics
+   - Post-segmentation manual review to ensure quality
 
-3. **多模态向量化**
-   - 文本：使用大规模语言模型生成向量表示
-   - 图像：通过多模态模型处理，提取视觉与文本语义
-   - 表格：专用模型转换为结构化文本后向量化
-   - 所有非文本内容经过人工确认后再进行向量化
+3. **Multimodal Vectorization**
+   - Text: Generate vector representations using large-scale language models
+   - Images: Process through multimodal models, extracting visual and textual semantics
+   - Tables: Convert to structured text using specialized models before vectorization
+   - All non-text content undergoes human confirmation before vectorization
 
-4. **结构化处理**（可选）
-   - 通过大模型将非结构化内容转换为JSON格式
-   - 字段粒度和深度可根据业务需求定制
-   - 支持复杂嵌套结构和多级关系
+4. **Structured Processing** (Optional)
+   - Convert unstructured content to JSON format using large models
+   - Field granularity and depth can be customized according to business requirements
+   - Support for complex nested structures and multi-level relationships
 
-5. **多级索引构建**
-   - 向量索引：所有内容的语义向量进入向量数据库
-   - 实体索引：抽取的实体及关系进入专用索引
-   - 结构化索引：JSON数据导入关系型数据库
-   - 混合索引：支持多路召回和交叉验证
+5. **Multi-level Index Construction**
+   - Vector Index: Semantic vectors of all content enter the vector database
+   - Entity Index: Extracted entities and relationships enter specialized indices
+   - Structured Index: JSON data is imported into a relational database
+   - Hybrid Index: Supports multi-path recall and cross-validation 
 
 
+## System Limitations and Improvement Directions
 
-## 系统局限性与改进方向
+### Current Intent Recognition Module Limitations
 
-### 当前意图识别模块的局限
+1. **Limited Streaming Output Support**
+   - The current framework does not support true incremental streaming output
+   - Large responses may cause extended waiting times on the frontend
+   - User experience may be affected during complex queries
 
-1. **流式输出支持有限**
-   - 当前框架不支持真正的增量式流式输出
-   - 大型响应可能导致前端等待时间延长
-   - 用户体验在复杂查询时可能受到影响
+2. **Optimization Effect Quantification Challenges**
+   - Optimization effects are not easily reflected in quantitative metrics
+   - Domain adaptability improvements are difficult to measure precisely
+   - Comparative test benchmarks are not yet complete
 
-2. *优化效果量化挑战**
-   - 优化效果不易在量化指标上直观体现
-   - 领域适应性提升难以精确衡量
-   - 对比测试基准尚不完善
+3. **Insufficient Architectural Flexibility**
+   - The existing framework has high coupling with business logic
+   - Difficult to quickly adapt to new domains and requirements
+   - Future goal: Develop into a configurable middleware form, supporting plugin-based development
 
-3. **架构灵活性不足**
-   - 现有框架与业务逻辑耦合度较高
-   - 难以快速适应新领域和新需求
-   - 未来目标：发展为可配置的中间件形态，支持插件式开发
+### Complex Query Processing Capability
 
-### 复杂查询处理能力
+1. **Multi-condition Filtering Query Support Status**
+   - The system principally supports statistical queries with multiple filtering conditions
+   - For example: "How many species of sharks in the order Hexanchiformes are over 3m long and live in the East China Sea?"
 
-1. **多条件筛选查询支持情况**
-   - 系统原则上支持多条件筛选的统计查询
-   - 例如："体长3m以上，生活在东海的虎鲨目鲨鱼有多少种？"
+2. **Query Precision Dependency Factors**
+   - Query precision is highly dependent on the field granularity of structured data
+   - Key conditions:
+     * User filtering conditions must match the structured data fields processed by `entity_extraction_db.py`
+     * Query fields need to be stored as independent attributes (such as "body length", "natural distribution area")
+     * If attributes are merged (e.g., multiple features merged into "biological features"), query precision will be significantly reduced
 
-2. **查询精度依赖因素**
-   - 查询精度高度依赖于结构化数据的字段粒度
-   - 关键条件：
-     * 用户筛选条件必须与`entity_extraction_db.py`处理的结构化数据字段匹配
-     * 查询字段需作为独立属性存储（如"体长"、"自然分布地"）
-     * 若属性被合并（如多种特征合并为"生物特征"），查询精度将显著降低
+3. **Improvement Directions**
+   - Optimize entity extraction logic to support more fine-grained attribute recognition
+   - Enhance structured data processing, improve attribute separation and standardization
+   - Improve fuzzy matching capabilities to handle non-exact condition expressions
+   - Introduce automatic field mapping to enable intelligent correspondence between user queries and data fields
 
-3. **改进方向**
-   - 优化实体抽取逻辑，支持更细粒度的属性识别
-   - 增强结构化数据处理，改进属性分离与标准化
-   - 提升模糊匹配能力，处理非精确条件表述
-   - 引入自动字段映射，实现用户查询与数据字段的智能对应
+### Response Efficiency Improvement Strategies
 
-### 响应效率提升策略
-
-1. **本地部署优化**
-   - 本地模型部署可显著提升整体响应速度
-   - 推荐搭配高性能推理框架：
-     * [VLLM](https://github.com/vllm-project/vllm)：支持高效批处理和KV缓存
-     * [Xinference](https://github.com/xorbitsai/xinference)：分布式推理支持和资源优化
-   - 模型选择建议：
-     * 不推荐本地部署小参数模型（7B/14B），推理质量难以满足复杂推理需求
+1. **Local Deployment Optimization**
+   - Local model deployment can significantly improve overall response speed
+   - Recommended high-performance inference frameworks:
+     * [VLLM](https://github.com/vllm-project/vllm): Supports efficient batch processing and KV caching
+     * [Xinference](https://github.com/xorbitsai/xinference): Distributed inference support and resource optimization
+   - Model selection recommendations:
+     * Not recommended to locally deploy small parameter models (7B/14B), as inference quality is difficult to meet complex reasoning requirements
    
-2. **API服务选择**
-   - 不同服务提供商性能差异显著
-   - 服务对比分析：
-     * DeepSeek官方API：功能完整但响应较慢，适合非实时场景
-   - 选择建议：
-     * 对成本敏感的场景，可在保证基本性能的前提下选择性价比更高的服务商
-     * 建议在正式部署前进行多服务商的性能和成本对比测试
-   
+2. **API Service Selection**
+   - Significant performance differences between different service providers
+   - Service comparison analysis:
+     * DeepSeek official API: Complete functionality but slower response, suitable for non-real-time scenarios
+   - Selection recommendations:
+     * For cost-sensitive scenarios, choose service providers with better cost-performance ratio while ensuring basic performance
+     * Recommended to conduct performance and cost comparison tests across multiple service providers before formal deployment
    
    
-## 图谱管理与展示说明
+   
+## Graph Management and Display Information
 
-### 图数据库与可视化优化
+### Graph Database and Visualization Optimization
 
-1. **当前图谱管理架构**
-   - 采用轻量级图数据库实现（基于NetworkX）
-   - 特点与局限：
-     * 高效灵活，便于集成和部署
-     * 缺少专业的图数据库管理界面
-     * 不支持复杂的可视化配置和交互操作
-   - 未来规划：
-     * 集成专业图数据库（如Neo4j或TigerGraph）
-     * 开发管理员控制台，支持图谱结构调整
-     * 优化存储结构，提升大规模图谱处理能力
+1. **Current Graph Management Architecture**
+   - Using lightweight graph database implementation (based on NetworkX)
+   - Features and limitations:
+     * Efficient and flexible, easy to integrate and deploy
+     * Lacks professional graph database management interface
+     * Does not support complex visualization configuration and interaction operations
+   - Future plans:
+     * Integrate professional graph databases (such as Neo4j or TigerGraph)
+     * Develop administrator console, supporting graph structure adjustment
+     * Optimize storage structure, enhancing large-scale graph processing capabilities
 
-2. **知识图谱展现优化**
-   - 当前实现：
-     * 基础HTML展示（`knowledge_graph-1.html`）
-     * 简单网络图布局，缺乏交互功能
-     * 节点和边的样式未经专业设计
-   - 改进计划：
-     * 引入专业图可视化库（如ECharts、Graphin等）
-     * 实现自适应布局和缩放功能
-     * 支持节点分组、过滤和高亮等交互特性
+2. **Knowledge Graph Display Optimization**
+   - Current implementation:
+     * Basic HTML display (`knowledge_graph-1.html`)
+     * Simple network graph layout, lacking interactive features
+     * Node and edge styles not professionally designed
+   - Improvement plans:
+     * Introduce professional graph visualization libraries (such as ECharts, Graphin, etc.)
+     * Implement adaptive layout and zoom functions
+     * Support node grouping, filtering, and highlighting interactive features
 
-3. **推理过程展示说明**
-   - 当前设计：
-     * 系统故意保留并展示详细的推理过程
-     * 目的：方便开发者和用户深入理解系统决策路径
-     * 有助于调试和验证推理质量
-   - 可配置选项：
-     * 生产环境可通过配置隐藏详细推理过程
-     * 研发环境可保留完整思考链用于开发和优化
-     * 后续版本将提供更精细的展示控制选项
+3. **Reasoning Process Display Information**
+   - Current design:
+     * The system deliberately retains and displays detailed reasoning processes
+     * Purpose: Facilitate developers and users in deeply understanding system decision paths
+     * Helps debugging and verifying reasoning quality
+   - Configurable options:
+     * Production environments can hide detailed reasoning processes through configuration
+     * Development environments can retain complete thinking chains for development and optimization
+     * Subsequent versions will provide more fine-grained display control options
 
 
+## 7. Next Steps
+### **From Solution to End-to-End Product**:
 
-## 7. 下一步计划
-### **从解决方案到端到端产品**：
+1. **Current Positioning and Limitations**
+   - The current open-source content is essentially a technical solution
+   - Main challenges:
+     * When users need to change datasets, extensive code modifications are required
+     * High degree of customization, limited reusability
+     * High technical threshold, not suitable for direct use by non-technical teams
 
-1. **当前定位与局限**
-   - 目前开源内容本质上是一套技术解决方案
-   - 主要挑战：
-     * 用户需更换数据集时，需修改大量代码
-     * 定制化程度高，可复用性有限
-     * 技术门槛较高，不适合非技术团队直接使用
+2. **Product Development Roadmap**
+   - Core transformation: From code modification to configuration-driven
+   - Planned features:
+     * Visual configuration interface: Intent recognition framework signatures, evaluation plans, etc.
+     * Modular design: Supporting plug-and-play component replacement
+     * Low-code/no-code interface: Lowering usage threshold
+     * Automated workflows: Simplifying data preprocessing and model optimization processes
+   - Goal: Significantly reduce enterprise knowledge base construction and maintenance costs
 
-2. **产品化发展路线**
-   - 核心转变：从代码修改到配置驱动
-   - 规划功能：
-     * 可视化配置界面：意图识别框架签名、评估方案等
-     * 模块化设计：支持即插即用的组件替换
-     * 低代码/无代码接口：降低使用门槛
-     * 自动化工作流：简化数据预处理和模型优化过程
-   - 目标：大幅降低企业知识库构建与维护成本
+3. **"Datacapsule" Product Vision**
+   - Product name origin: Datacapsule — small capsule containing enormous energy
+   - Core value propositions:
+     * Reduce enterprise knowledge construction difficulty
+     * Form closed-loop enterprise knowledge barriers
+     * Release the potential of large models in vertical domains
+   - Application scenarios:
+     * Enterprise proprietary knowledge management
+     * Professional domain intelligent Q&A
+     * Industry knowledge graph construction and application
 
-3. **"数据胶囊"产品愿景**
-   - 产品名称由来：Datacapsule（数据胶囊）—— 小小胶囊蕴含庞大能量
-   - 核心价值主张：
-     * 降低企业知识构建难度
-     * 形成企业闭环的知识壁垒
-     * 释放大模型在垂直领域的潜力
-   - 适用场景：
-     * 企业专有知识管理
-     * 专业领域智能问答
-     * 行业知识图谱构建与应用
+### Open Collaboration Invitation
 
-### 开放协作邀请
-
-我们诚挚邀请对知识图谱、大模型应用、数据处理等领域感兴趣的开发者加入项目。如有兴趣，请扫描README文件末尾的二维码与我们联系，一起探索知识增强的未来！
+We sincerely invite developers interested in knowledge graphs, large model applications, data processing, and other fields to join the project. If interested, please scan the QR code at the end of the README file to contact us and explore the future of knowledge enhancement together!
 
    
 
-## 8.鸣谢
+## 8. Acknowledgments
 
-**项目鸣谢**：十分感谢百度飞桨AI技术生态部：梦姐、楠哥和张翔、新飞同学对本项目的大力支持与帮助！
+**Project Acknowledgments**: Many thanks to the Baidu PaddlePaddle AI Technology Ecosystem Department: 梦姐、楠哥, and 张翔、新飞 for their strong support and help with this project!
 
-**项目核心贡献者**：Loukie7、Alex—鹏哥
+**Project Core Contributors**: Loukie7、Alex—鹏哥
 
-对项目感兴趣的同学可以扫码添加好友，后续会成立产品交流社群
+If you are interested in the project, you can scan the code to add friends. A product communication group will be established later.
 
-![二维码](./images/二维码.jpg)
+![QR Code](./images/二维码.jpg) 
+
