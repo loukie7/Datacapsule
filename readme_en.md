@@ -5,14 +5,18 @@ Datacapsule是一个基于知识图谱的多路召回解决方案，旨在通过
 <br>
 
 <div align="center">
-  <img src="https://img.shields.io/badge/解决方案-red" />
-  <img src="https://img.shields.io/badge/免费-blue" />
+  <img src="https://img.shields.io/badge/Solution-red" />
+  <img src="https://img.shields.io/badge/Free-blue" />
   <img src="https://img.shields.io/badge/Python-yellow" />
   <img src="https://img.shields.io/badge/JavaScript-orange" />
   <img src="https://img.shields.io/badge/TypeScript-blue" />
   <br />
-  <img src="https://img.shields.io/badge/English-lightgrey" />
-  <img src="https://img.shields.io/badge/简体中文-lightgrey" />
+  <a href="./readme.md">
+    <img src="https://img.shields.io/badge/English-lightgrey" />
+  </a>
+  <a href="./readme_en.md">
+    <img src="https://img.shields.io/badge/简体中文-lightgrey" />
+  </a>
 </div>
 
 
