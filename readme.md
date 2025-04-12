@@ -11,10 +11,10 @@ Datacapsule is a knowledge graph-based multi-path retrieval solution designed to
   <img src="https://img.shields.io/badge/JavaScript-orange" />
   <img src="https://img.shields.io/badge/TypeScript-blue" />
   <br />
-  <a href="./README.md">
+  <a href="./readme.md">
     <img src="https://img.shields.io/badge/English-lightgrey" />
   </a>
-  <a href="./README.zh-CN.md">
+  <a href="./readme_en.md">
     <img src="https://img.shields.io/badge/简体中文-lightgrey" />
   </a>
 </div>
