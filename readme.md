@@ -61,7 +61,7 @@ If the entity exists in the graph, the system then determines the type of user q
   - requirements.txt (Dependency list)
   - .env (Environment configuration file)
 
-- frontend/ (Frontend service directory)
+- (Frontend service directory)
   - src/ (Source code directory)
     - components/ (Components directory)
       - Chat/ (Chat related components)
@@ -314,12 +314,10 @@ This project uses environment variables to configure API and WebSocket addresses
 
 ### Start Backend Service
 ```bash
-cd backend
 python app.py
 ```
 ### Start Frontend Service
 ```bash
-cd frontend 
 npm install
 - Development environment: `npm run dev` (Uses configuration from `.env.development` or `.env`)
 - Production build: `npm run build` (Uses configuration from `.env.production`)
