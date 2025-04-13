@@ -226,9 +226,17 @@ Datacapsule是一个基于知识图谱的多路召回解决方案，旨在通过
 
 
 # 快速开始
+## 0.拉取服务
+### 拉取后端服务
+```bash
+git clone https://github.com/loukie7/Datacapsule.git
+```
+### 拉取前端服务
+点击[Datacapsule-webui 项目仓库](https://github.com/loukie7/Datacapsule-webui)查看
 
 ## 1. 安装依赖
 ```bash
+cd Datacapsule
 pip install -r requirements.txt
 ```
 注意：如果安装时报错，可能是requirements.txt文件格式问题，建议：
@@ -305,10 +313,7 @@ d) Embedding模型配置（文本向量化参数）：
 - 建议在正式部署前在测试环境中验证配置的正确性
 
 ## 3. 运行服务
-## 拉取后端服务
-```bash
-git clone https://github.com/loukie7/Datacapsule.git
-```
+
 ## 环境配置
 本项目使用环境变量来配置API和WebSocket地址。
 
@@ -327,13 +332,8 @@ cd Datacapsule
 python app.py
 ```
 ### 启动前端服务
-[Datacapsule-webui 项目仓库](https://github.com/loukie7/Datacapsule-webui)
-```bash
-cd Datacapsule-webui
-npm install
-- 开发环境: `npm run dev` (使用`.env.development`或`.env`中的配置)
-- 生产构建: `npm run build` (使用`.env.production`中的配置)
-```
+点击[Datacapsule-webui 项目仓库](https://github.com/loukie7/Datacapsule-webui)查看
+
 ## 4. 数据处理说明
 本项目提供了两种数据处理方式：
 1. 使用内置示例数据（默认方式）
