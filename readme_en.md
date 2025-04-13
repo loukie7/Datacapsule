@@ -305,6 +305,10 @@ d) Embedding模型配置（文本向量化参数）：
 - 建议在正式部署前在测试环境中验证配置的正确性
 
 ## 3. 运行服务
+## 拉取后端服务
+```bash
+git clone https://github.com/loukie7/Datacapsule.git
+```
 ## 环境配置
 本项目使用环境变量来配置API和WebSocket地址。
 
@@ -317,11 +321,15 @@ d) Embedding模型配置（文本向量化参数）：
 - `VITE_WS_URL`: WebSocket服务地址
 
 ### 启动后端服务
+确保Datacapsule和Datacapsule-webui在一个文件夹内
 ```bash
+cd Datacapsule
 python app.py
 ```
 ### 启动前端服务
+[Datacapsule-webui 项目仓库](https://github.com/loukie7/Datacapsule-webui)
 ```bash
+cd Datacapsule-webui
 npm install
 - 开发环境: `npm run dev` (使用`.env.development`或`.env`中的配置)
 - 生产构建: `npm run build` (使用`.env.production`中的配置)
