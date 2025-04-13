@@ -35,7 +35,7 @@ If the entity exists in the graph, the system then determines the type of user q
 
 2. **Project Structure Overview**:
 
-- backend/ (Backend service directory)
+- (Backend service directory)
   - dspy_program/ (DSPy models and programs directory)
     - retrieval_demo_18.json (Small sample dataset)
     - retrieval_demo_130.json (Full-scale dataset)
@@ -169,7 +169,7 @@ If the entity exists in the graph, the system then determines the type of user q
    - Collection of user Q&A pairs
    - Reasoning process display
    - Optimization progress display
-   Corresponding to the implementation in the `frontend` directory.
+   Corresponding to the implementation in the directory.
 
 11. **System Monitoring and Logging**:
    - Hierarchical logging system based on loguru
@@ -202,8 +202,8 @@ If the entity exists in the graph, the system then determines the type of user q
 - Knowledge Extraction:
   * Entity & Relationship Extraction: DSPy + CoT (Chain of Thought)
 - AI Models:
-  * Embedding Model: See configuration in backend/.env.example
-  * Large Language Model: Supports OpenAI/DeepSeek, etc., see configuration in backend/.env.example
+  * Embedding Model: See configuration in .env.example
+  * Large Language Model: Supports OpenAI/DeepSeek, etc., see configuration in .env.example
 - Development Tools:
   * Dependency Management: pip
   * Environment Management: python-dotenv
@@ -225,7 +225,7 @@ See requirements.txt for details
 
 ## 1. Install Dependencies
 ```bash
-pip install -r backend/requirements.txt
+pip install -r requirements.txt
 ```
 Note: If you encounter errors during installation, it might be due to formatting issues in the requirements.txt file. Suggestions:
 - Copy the contents of requirements.txt to a new file
@@ -370,7 +370,7 @@ This limitation is a trade-off in the current system design and can be improved 
 
   ![Statistical Information Query](./images/统计信息查询.jpg)
 
-  The correctness of the questions can be verified in ~backend/docs/demo130.json
+  The correctness of the questions can be verified in ~docs/demo130.json
 
 - **Knowledge Graph Display:**
 
@@ -496,10 +496,10 @@ This project contains two built-in example datasets (`demo18.json` and `demo130.
 
 ```bash
 # Replace small test dataset
-cp your_small_dataset.json backend/docs/demo18.json
+cp your_small_dataset.json docs/demo18.json
 
 # Replace complete dataset
-cp your_full_dataset.json backend/docs/demo130.json
+cp your_full_dataset.json docs/demo130.json
 ```
 
 The two datasets share the same structure and fields, differing only in data volume, convenient for quick testing and complete training.
