@@ -62,7 +62,7 @@ Datacapsule是一个基于知识图谱的多路召回解决方案，旨在通过
   - requirements.txt（依赖包列表）
   - .env（环境配置文件）
 
-- frontend/（前端服务目录）
+- （前端服务目录）
   - src/（源代码目录）
     - components/（组件目录）
       - Chat/（聊天相关组件）
@@ -171,7 +171,7 @@ Datacapsule是一个基于知识图谱的多路召回解决方案，旨在通过
    - 用户问答对收集
    - 推理过程展示
    - 优化进度展示
-      对应前端 `frontend` 目录的实现。
+      对应前端目录的实现。
 
 11. **系统监控与日志**：
    - 基于 loguru 的分级日志系统
@@ -237,7 +237,7 @@ pip install -r requirements.txt
 - 使用新创建的依赖文件进行安装
 
 ## 2. 配置环境变量
-在backend目录下创建.env文件，并按照.env.example模板进行配置。主要配置项如下：
+在目录下创建.env文件，并按照.env.example模板进行配置。主要配置项如下：
 
 a) 大语言模型配置：
     本项目使用DSPy进行意图识别，需要配置两个独立的模型：
@@ -318,12 +318,10 @@ d) Embedding模型配置（文本向量化参数）：
 
 ### 启动后端服务
 ```bash
-cd backend
 python app.py
 ```
 ### 启动前端服务
 ```bash
-cd frontend 
 npm install
 - 开发环境: `npm run dev` (使用`.env.development`或`.env`中的配置)
 - 生产构建: `npm run build` (使用`.env.production`中的配置)
