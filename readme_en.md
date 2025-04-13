@@ -36,7 +36,7 @@ Datacapsule是一个基于知识图谱的多路召回解决方案，旨在通过
 
 2. **项目文件结构概要**：
 
-- backend/（后端服务目录）
+- （后端服务目录）
   - dspy_program/（DSPy模型及程序目录）
     - retrieval_demo_18.json（小型示例数据集）
     - retrieval_demo_130.json（完整规模数据集）
@@ -205,8 +205,8 @@ Datacapsule是一个基于知识图谱的多路召回解决方案，旨在通过
 - 知识抽取：
   * 实体&关系抽取：DSPy + CoT (Chain of Thought)
 - AI 模型：
-  * Embedding 模型：支持 配置见 backend/.env.example
-  * 大语言模型：支持 OpenAI/DeepSeek等，配置见 backend/.env.example
+  * Embedding 模型：支持 配置见 .env.example
+  * 大语言模型：支持 OpenAI/DeepSeek等，配置见 .env.example
 - 开发工具：
   * 依赖管理：pip
   * 环境管理：python-dotenv
@@ -229,7 +229,7 @@ Datacapsule是一个基于知识图谱的多路召回解决方案，旨在通过
 
 ## 1. 安装依赖
 ```bash
-pip install -r backend/requirements.txt
+pip install -r requirements.txt
 ```
 注意：如果安装时报错，可能是requirements.txt文件格式问题，建议：
 - 复制requirements.txt内容到新文件
@@ -377,7 +377,7 @@ npm install
 
   ![统计信息查询](./images/统计信息查询.jpg)
 
-  问题的正确性可以去～backend/docs/demo130.json自行验证
+  问题的正确性可以去～docs/demo130.json自行验证
 
 - **知识图谱展现：**
 
@@ -507,10 +507,10 @@ npm install
 
 ```bash
 # 替换小型测试数据集
-cp your_small_dataset.json backend/docs/demo18.json
+cp your_small_dataset.json docs/demo18.json
 
 # 替换完整数据集
-cp your_full_dataset.json backend/docs/demo130.json
+cp your_full_dataset.json docs/demo130.json
 ```
 
 两个数据集共享相同的结构和字段，仅在数据量上有区别，方便您进行快速测试和完整训练。
