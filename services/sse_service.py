@@ -1,6 +1,6 @@
 import json
 import asyncio
-from typing import AsyncGenerator, Dict, Any
+from typing import AsyncGenerator, Dict, Any, Set, List
 from sse_starlette.sse import EventSourceResponse, ServerSentEvent
 from loguru import logger
 from core.config import predictor_version
@@ -8,9 +8,85 @@ from core.config import predictor_version
 class SSEService:
     """Server-Sent Events 服务"""
     
-    def __init__(self, dspy_processor, manager):
+    def __init__(self, dspy_processor):
         self.dspy_processor = dspy_processor
-        self.manager = manager
+        # 添加 SSE 连接管理 - 使用字典存储连接和对应的队列
+        self.connections: Dict[str, asyncio.Queue] = {}
+
+    async def add_connection(self, connection_id: str, queue: asyncio.Queue):
+        """添加 SSE 连接"""
+        self.connections[connection_id] = queue
+        logger.info(f"新增 SSE 连接 {connection_id}，当前连接数: {len(self.connections)}")
+
+    async def remove_connection(self, connection_id: str):
+        """移除 SSE 连接"""
+        if connection_id in self.connections:
+            del self.connections[connection_id]
+            logger.info(f"移除 SSE 连接 {connection_id}，当前连接数: {len(self.connections)}")
+
+    async def broadcast_event(self, event: str, data: Dict[str, Any]):
+        """向所有 SSE 连接广播事件"""
+        if not self.connections:
+            logger.info("没有活跃的 SSE 连接，跳过广播")
+            return
+
+        message = ServerSentEvent(
+            data=json.dumps(data, ensure_ascii=False),
+            event=event
+        )
+        
+        # 向所有连接的队列中推送消息
+        disconnected = []
+        for connection_id, queue in self.connections.items():
+            try:
+                # 使用 nowait 避免阻塞，如果队列满了就跳过
+                queue.put_nowait(message)
+            except asyncio.QueueFull:
+                logger.warning(f"连接 {connection_id} 的队列已满，跳过这次广播")
+            except Exception as e:
+                logger.warning(f"向 SSE 连接 {connection_id} 发送消息失败: {e}")
+                disconnected.append(connection_id)
+        
+        # 清理断开的连接
+        for connection_id in disconnected:
+            await self.remove_connection(connection_id)
+        
+        logger.info(f"广播事件 '{event}' 到 {len(self.connections) - len(disconnected)} 个连接")
+
+    async def events_stream(self) -> AsyncGenerator[ServerSentEvent, None]:
+        """SSE 事件流生成器，用于状态推送"""
+        # 为每个连接创建唯一 ID
+        connection_id = f"sse_{asyncio.current_task().get_name()}_{id(asyncio.current_task())}"
+        
+        # 创建广播队列
+        broadcast_queue = asyncio.Queue(maxsize=100)  # 限制队列大小防止内存泄漏
+        
+        await self.add_connection(connection_id, broadcast_queue)
+        
+        try:
+            # 发送连接确认
+            yield ServerSentEvent(
+                data=json.dumps({"message": "SSE 连接已建立", "connection_id": connection_id}, ensure_ascii=False),
+                event="connected"
+            )
+            
+            # 持续监听广播队列
+            while True:
+                try:
+                    # 等待广播消息，设置超时以便定期发送心跳
+                    message = await asyncio.wait_for(broadcast_queue.get(), timeout=30.0)
+                    yield message
+                except asyncio.TimeoutError:
+                    # 发送心跳消息
+                    yield ServerSentEvent(
+                        data=json.dumps({"timestamp": asyncio.get_event_loop().time()}, ensure_ascii=False),
+                        event="heartbeat"
+                    )
+                    
+        except Exception as e:
+            logger.error(f"SSE 连接 {connection_id} 异常: {e}")
+        finally:
+            await self.remove_connection(connection_id)
 
     async def stream_react_response(self, prompt: str) -> AsyncGenerator[ServerSentEvent, None]:
         """
@@ -124,20 +200,38 @@ class SSEService:
         json_message = json.dumps(data_to_send, ensure_ascii=False, indent=2)
         logger.info(json_message)
         
-        # 通过 SSE 返回完整消息，而不是通过 websocket
+        # 通过 SSE 返回完整消息
         yield ServerSentEvent(
             data=json.dumps({'prompt_history': json_message}, ensure_ascii=False),
             event="completion"
         )
     
     def create_event_source_response(self, prompt: str) -> EventSourceResponse:
-        """创建 EventSourceResponse"""
+        """创建聊天的 EventSourceResponse"""
         return EventSourceResponse(
             self.stream_react_response(prompt),
             ping=5,  # 每5秒发送一次ping，提高响应性
             headers={
                 "Cache-Control": "no-cache, no-store, must-revalidate",
                 "Pragma": "no-cache",
+                "Expires": "0",
+                "Connection": "keep-alive",
+                "Content-Type": "text/event-stream; charset=utf-8",
+                "X-Accel-Buffering": "no",  # 禁用Nginx缓冲
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "*"
+            }
+        )
+
+    def create_events_response(self) -> EventSourceResponse:
+        """创建状态推送的 EventSourceResponse"""
+        return EventSourceResponse(
+            self.events_stream(),
+            ping=30,  # 每30秒发送一次ping
+            headers={
+                "Cache-Control": "no-cache, no-store, must-revalidate",
+                "Pragma": "no-cache", 
                 "Expires": "0",
                 "Connection": "keep-alive",
                 "Content-Type": "text/event-stream; charset=utf-8",

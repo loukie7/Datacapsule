@@ -9,19 +9,18 @@ from schemas import ResponseWrapper, TrainingRequest
 from core.database import SessionLocal
 from core.config import optimization_tasks
 from models import Interaction, Version
-from services import ConnectionManager
 
 router = APIRouter()
 
 # 全局变量，稍后在 main.py 中初始化
-manager = None
 dspy_service = None
+sse_service = None
 
-def init_services(connection_manager: ConnectionManager, dspy_svc):
+def init_services(dspy_svc, sse_svc):
     """初始化服务实例"""
-    global manager, dspy_service
-    manager = connection_manager
+    global dspy_service, sse_service
     dspy_service = dspy_svc
+    sse_service = sse_svc
 
 # 异步优化任务
 async def run_dspy_optimization(training_data: List[Dict], version: str, ids: List[str]):
@@ -37,15 +36,12 @@ async def run_dspy_optimization(training_data: List[Dict], version: str, ids: Li
         # 更新状态并发送开始消息
         logger.info(f"开始优化任务 {task_id}，数据量: {len(training_data)}，版本: {version}")
         optimization_tasks[task_id] = "loading_data"
-        await manager.broadcast(json.dumps({
-            "type": "optimization_status",
-            "data": {
-                "task_id": task_id,
-                "status": "loading_data",
-                "progress": 5,
-                "message": "正在准备训练数据..."
-            }
-        }))
+        await sse_service.broadcast_event("optimization_status", {
+            "task_id": task_id,
+            "status": "loading_data",
+            "progress": 5,
+            "message": "正在准备训练数据..."
+        })
 
         # 创建训练集
         import dspy
@@ -61,15 +57,12 @@ async def run_dspy_optimization(training_data: List[Dict], version: str, ids: Li
         
         # 更新状态
         optimization_tasks[task_id] = "preparing_model"
-        await manager.broadcast(json.dumps({
-            "type": "optimization_status",
-            "data": {
-                "task_id": task_id,
-                "status": "preparing_model",
-                "progress": 10,
-                "message": "正在准备模型..."
-            }
-        }))
+        await sse_service.broadcast_event("optimization_status", {
+            "task_id": task_id,
+            "status": "preparing_model",
+            "progress": 10,
+            "message": "正在准备模型..."
+        })
         
         # 从最新版本加载预测模型
         session = SessionLocal()
@@ -84,15 +77,12 @@ async def run_dspy_optimization(training_data: List[Dict], version: str, ids: Li
         
         # 更新状态
         optimization_tasks[task_id] = "optimizing"
-        await manager.broadcast(json.dumps({
-            "type": "optimization_status",
-            "data": {
-                "task_id": task_id,
-                "status": "optimizing",
-                "progress": 15,
-                "message": "正在进行模型优化..."
-            }
-        }))
+        await sse_service.broadcast_event("optimization_status", {
+            "task_id": task_id,
+            "status": "optimizing",
+            "progress": 15,
+            "message": "正在进行模型优化..."
+        })
         
         # 编译优化
         logger.info(f"任务 {task_id}: 开始编译优化")
@@ -101,15 +91,12 @@ async def run_dspy_optimization(training_data: List[Dict], version: str, ids: Li
         
         # 更新状态
         optimization_tasks[task_id] = "saving_model"
-        await manager.broadcast(json.dumps({
-            "type": "optimization_status",
-            "data": {
-                "task_id": task_id,
-                "status": "saving_model",
-                "progress": 50,
-                "message": "正在保存优化后的模型..."
-            }
-        }))
+        await sse_service.broadcast_event("optimization_status", {
+            "task_id": task_id,
+            "status": "saving_model",
+            "progress": 50,
+            "message": "正在保存优化后的模型..."
+        })
         
         # 确保目录存在
         os.makedirs("dspy_program", exist_ok=True)
@@ -142,37 +129,31 @@ async def run_dspy_optimization(training_data: List[Dict], version: str, ids: Li
         # 更新状态为完成
         optimization_tasks[task_id] = "completed"
         
-        # 通过 WebSocket 广播版本更新消息
-        await manager.broadcast(json.dumps({
-            "type": "version_update",
-            "data": {
-                "old_version": version,
-                "new_version": new_version,
-                "description": description,
-                "model_path": output_path,
-                "training_ids": ids,
-                "progress": 100,
-                "message": f"优化完成，已创建新版本{new_version}"
-            }
-        }))
+        # 通过 SSE 广播版本更新消息
+        await sse_service.broadcast_event("version_update", {
+            "old_version": version,
+            "new_version": new_version,
+            "description": description,
+            "model_path": output_path,
+            "training_ids": ids,
+            "progress": 100,
+            "message": f"优化完成，已创建新版本{new_version}"
+        })
         logger.info(f"任务 {task_id}: 优化任务完成")
         
     except Exception as e:
-        # 记录错误并通过 WebSocket 发送失败消息
+        # 记录错误并通过 SSE 发送失败消息
         error_message = str(e)
         logger.error(f"任务 {task_id} 失败: {error_message}")
         optimization_tasks[task_id] = f"failed: {error_message}"
         
-        await manager.broadcast(json.dumps({
-            "type": "optimization_failed",
-            "data": {
-                "version": version,
-                "error": error_message,
-                "task_id": task_id,
-                "progress": 0,
-                "message": f"优化失败: {error_message}"
-            }
-        }))
+        await sse_service.broadcast_event("optimization_failed", {
+            "version": version,
+            "error": error_message,
+            "task_id": task_id,
+            "progress": 0,
+            "message": f"优化失败: {error_message}"
+        })
     finally:
         if session:
             session.close()
@@ -187,17 +168,14 @@ def start_optimization_task(task_info):
     # 在新的事件循环中运行异步任务
     try:
         # 发送初始通知
-        loop.run_until_complete(manager.broadcast(json.dumps({
-            "type": "optimization_created",
-            "data": {
-                "task_id": task_info["task_id"],
-                "status": "pending",
-                "progress": 0,
-                "message": f"已创建优化任务，准备处理 {len(task_info['training_data'])} 条数据",
-                "version": task_info["version"],
-                "ids": task_info["ids"]
-            }
-        })))
+        loop.run_until_complete(sse_service.broadcast_event("optimization_created", {
+            "task_id": task_info["task_id"],
+            "status": "pending",
+            "progress": 0,
+            "message": f"已创建优化任务，准备处理 {len(task_info['training_data'])} 条数据",
+            "version": task_info["version"],
+            "ids": task_info["ids"]
+        }))
         
         # 设置状态为 running
         optimization_tasks[task_info["task_id"]] = "running"
@@ -213,16 +191,13 @@ def start_optimization_task(task_info):
         # 设置任务状态为失败
         optimization_tasks[task_info["task_id"]] = f"failed: {str(e)}"
         # 发送失败通知
-        loop.run_until_complete(manager.broadcast(json.dumps({
-            "type": "optimization_failed",
-            "data": {
-                "version": task_info["version"],
-                "error": str(e),
-                "task_id": task_info["task_id"],
-                "progress": 0,
-                "message": f"优化失败: {str(e)}"
-            }
-        })))
+        loop.run_until_complete(sse_service.broadcast_event("optimization_failed", {
+            "version": task_info["version"],
+            "error": str(e),
+            "task_id": task_info["task_id"],
+            "progress": 0,
+            "message": f"优化失败: {str(e)}"
+        }))
     finally:
         # 关闭事件循环
         loop.close()

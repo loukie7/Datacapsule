@@ -81,3 +81,16 @@ async def chat(
     finally:
         if 'session' in locals():
             session.close() 
+
+@router.get("/events")
+async def events_stream():
+    """SSE 状态推送端点"""
+    try:
+        return sse_service.create_events_response()
+    except Exception as e:
+        logger.error(f"SSE 状态推送端点错误: {str(e)}")
+        return ResponseWrapper(
+            status_code=500,
+            detail="error", 
+            data={"message": str(e)}
+        ) 

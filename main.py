@@ -7,15 +7,14 @@ from core.config import logger
 from core.database import create_tables
 
 # 导入服务
-from services import ConnectionManager, SSEService, DspyService
+from services import SSEService, DspyService
 
 # 导入API路由
 from api import (
     chat_router, 
     data_router, 
     version_router, 
-    training_router, 
-    websocket_router
+    training_router
 )
 from api.health import router as health_router
 
@@ -39,25 +38,21 @@ app.add_middleware(
 )
 
 # 初始化服务
-manager = ConnectionManager()
 dspy_service = DspyService()
-sse_service = SSEService(dspy_service.inference_processor, manager)
+sse_service = SSEService(dspy_service.inference_processor)
 
 # 初始化各个模块的服务实例
 from api.chat import init_services as init_chat_services
 from api.training import init_services as init_training_services  
-from api.websocket import init_services as init_websocket_services
 
 init_chat_services(dspy_service, sse_service)
-init_training_services(manager, dspy_service)
-init_websocket_services(manager)
+init_training_services(dspy_service, sse_service)
 
 # 注册路由
 app.include_router(chat_router, tags=["聊天"])
 app.include_router(data_router, tags=["数据管理"])
 app.include_router(version_router, tags=["版本管理"])
 app.include_router(training_router, tags=["训练优化"])
-app.include_router(websocket_router, tags=["WebSocket"])
 app.include_router(health_router, tags=["健康检查"])
 
 @app.on_event("startup")
