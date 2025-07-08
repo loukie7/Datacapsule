@@ -28,7 +28,7 @@
 
   <a href="https://github.com/loukie7/Datacapsule-webui">📱 Frontend Repository</a> •
   <a href="https://github.com/loukie7/Datacapsule/wiki">📚 Documentation</a> •
-  <a href="https://github.com/loukie7/Datacapsule/discussions">💬 Discussions</a>
+  <a href="https://github.com/loukie7/Datacapsule/issues">💬 Discussions</a>
 
 </div>
 
