@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./images/datacapsule.jpg" alt="Datacapsule Logo" width="400" />
+  <img src="./images/datacapsule.jpg" alt="Datacapsule Logo" width="800" />
   <h1>✨ Datacapsule</h1>
   <p><strong>Everything for precision</strong></p>
   <p>Datacapsule是一个基于知识图谱的多路召回解决方案，旨在通过多路召回技术，实现精准的知识检索。该解决方案涵盖了检索系统、实体关系抽取、实体属性抽取、实体链接、结构化数据库构建以及问答系统等多个功能模块，为信息检索和应用提供了强大的支持。</p>
@@ -33,6 +33,10 @@
 </div>
 
 ---
+
+## 🚀 技术解决方案
+
+<img src="./images/技术图_en.jpg" alt="Datacapsule Logo" width="1000" />
 
 ## 🚀 项目概述
 
