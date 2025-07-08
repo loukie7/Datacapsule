@@ -34,6 +34,9 @@
 
 ---
 
+## 🚀 Technology Solution
+<img src="./images/技术图.jpg" alt="Datacapsule Logo" width="400" />
+
 ## 🚀 Overview
 
 Datacapsule is an advanced knowledge graph-based multi-path retrieval solution that combines the power of graph databases, vector search, and intelligent reasoning to deliver precise information retrieval and question-answering capabilities. The system intelligently routes queries through multiple retrieval paths - vector search, graph traversal, and structured database queries - to provide comprehensive and accurate responses.
