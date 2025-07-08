@@ -22,7 +22,7 @@
   <br>
 
   <a href="./readme.md"><img src="https://img.shields.io/badge/English-lightgrey?style=for-the-badge" alt="English" /></a>
-  <a href="./readme_zh.md"><img src="https://github.com/loukie7/Datacapsule/blob/main/readme_en.md" alt="中文文档" /></a>
+  <a href="https://github.com/loukie7/Datacapsule/blob/main/readme_en.md"><img src="https://img.shields.io/badge/中文文档-lightgrey?style=for-the-badge" alt="中文文档" /></a>
 
   <br>
 
