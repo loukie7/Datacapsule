@@ -35,7 +35,7 @@
 ---
 
 ## 🚀 Technology Solution
-<img src="./images/技术图.jpg" alt="Datacapsule Logo" width="400" />
+<img src="./images/技术图.jpg" alt="Datacapsule Logo" width="800" />
 
 ## 🚀 Overview
 
