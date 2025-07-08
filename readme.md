@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./images/datacapsule.jpg" alt="Datacapsule Logo" width="400" />
+  <img src="./images/datacapsule.jpg" alt="Datacapsule Logo" width="800" />
   <h1>✨ Datacapsule</h1>
   <p><strong>Everything for precision</strong></p>
   <p>A knowledge graph-based multi-path retrieval solution for intelligent information extraction and Q&A</p>
@@ -35,7 +35,7 @@
 ---
 
 ## 🚀 Technology Solution
-<img src="./images/技术图.jpg" alt="Datacapsule Logo" width="800" />
+<img src="./images/技术图.jpg" alt="Datacapsule Logo" width="1000" />
 
 ## 🚀 Overview
 
