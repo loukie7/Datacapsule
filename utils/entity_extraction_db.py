@@ -56,7 +56,7 @@ def setup_dspy():
     
     if os.getenv("ALI_LLM_MODEL"):
         ali = dspy.LM(
-            f'deepseek/{os.getenv("ALI_LLM_MODEL")}',
+            f'{os.getenv("ALI_LLM_TYPE", "deepseek")}/{os.getenv("ALI_LLM_MODEL", "deepseek-chat")}',
             base_url=os.getenv("ALI_OPENAI_BASE_URL"),
             api_key=os.getenv("ALI_OPENAI_API_KEY")
         )

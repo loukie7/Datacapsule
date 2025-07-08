@@ -1,47 +1,46 @@
+"""
+Mini-React 数据库查询模块
+将原dspy_query_db.py中的功能迁移到mini-react
+"""
 import os
 import json
 import re
-import dspy
 import sqlite3
 from dotenv import load_dotenv
-# 设置DSPy的语言模型
-def setup_dspy():
-    load_dotenv(override=True)
-    
-    if os.getenv("Train_LLM_MODEL"):
-        Train = dspy.LM(
-            f'deepseek/{os.getenv("Train_LLM_MODEL")}',
-            base_url=os.getenv("Train_OPENAI_BASE_URL"),
-            api_key=os.getenv("Train_OPENAI_API_KEY")
-        )
-        dspy.settings.configure(lm=Train)
-    else:
-        # 默认使用OpenAI
-        dspy.settings.configure(lm="openai")
 
+from miniReact import Signature, InputField, OutputField, ChainOfThought, Module, LM
 
-# 在已有的签名定义之后添加
-class NaturalLanguageToSQL(dspy.Signature):
-    """将自然语言查询转换为SQL语句。注意：返回纯SQL文本，不要包含```sql或```等代码块标记。
-    重要：保持原始查询中的中文词汇不变，不要自动转换为拉丁文或英文。
-    当查询涉及到地理位置（distributions表中的location字段）时，必须使用LIKE语句而不是精确匹配，
-    例如：WHERE location LIKE '%东海%' 而不是 WHERE location = '东海'"""
-    query = dspy.InputField(description="用户的自然语言查询")
-    db_schema = dspy.InputField(description="数据库的表结构信息")
-    sql = dspy.OutputField(description="生成的SQL查询语句，必须是纯SQL文本，对地理位置使用LIKE操作符")
-    explanation = dspy.OutputField(description="SQL查询的解释")
-
-# 在已有的提取器类之后添加
-class SQLGenerator(dspy.Module):
+class NaturalLanguageToSQLSignature(Signature):
+    """将自然语言查询转换为SQL语句的签名"""
     def __init__(self):
+        super().__init__(
+            input_fields={
+                        "query": InputField(desc="用户的自然语言查询"),
+        "db_schema": InputField(desc="数据库的表结构信息")
+            },
+            output_fields={
+                        "sql": OutputField(desc="生成的SQL查询语句，必须是纯SQL文本，对地理位置使用LIKE操作符"),
+        "explanation": OutputField(desc="SQL查询的解释")
+            },
+            instructions="""将自然语言查询转换为SQL语句。注意：返回纯SQL文本，不要包含```sql或```等代码块标记。
+            重要：保持原始查询中的中文词汇不变，不要自动转换为拉丁文或英文。
+            当查询涉及到地理位置（distributions表中的location字段）时，必须使用LIKE语句而不是精确匹配，
+            例如：WHERE location LIKE '%东海%' 而不是 WHERE location = '东海'"""
+        )
+
+class SQLGenerator(Module):
+    """SQL生成器模块"""
+    def __init__(self, lm=None):
         super().__init__()
-        self.generator = dspy.ChainOfThought(NaturalLanguageToSQL)
+        self.generator = ChainOfThought(NaturalLanguageToSQLSignature())
+        if lm:
+            self.generator.lm = lm
     
     def forward(self, query, db_schema):
         return self.generator(query=query, db_schema=db_schema)
-    
-# 查询相关类
+
 class MarineSpeciesQuery:
+    """海洋物种查询类"""
     def __init__(self, db_path):
         """初始化查询器
         
@@ -49,7 +48,13 @@ class MarineSpeciesQuery:
             db_path: SQLite数据库文件路径
         """
         self.db_path = db_path
-        setup_dspy()
+        # 使用miniReact原生的LM实例
+        load_dotenv(override=True)
+        self.lm = LM(
+            model_name=os.getenv('LLM_MODEL', 'gpt-3.5-turbo'),
+            api_base=os.getenv('BASE_URL', 'https://api.openai.com/v1'),
+            api_key=os.getenv('API_KEY')
+        )
     
     def query_database(self, natural_language_query):
         """根据自然语言查询数据库
@@ -94,9 +99,6 @@ class MarineSpeciesQuery:
             
             db_schema_str = json.dumps(db_schema, ensure_ascii=False, indent=2)
             
-            # 当拼接db_schema_enriched时，添加关于location的使用说明
-            db_schema_enriched = json.dumps(db_schema, ensure_ascii=False, indent=2)
-            
             # 添加额外使用提示
             location_usage_hint = """
             重要提示：当查询涉及地理位置时，请使用LIKE操作符而不是等号(=)。
@@ -109,10 +111,10 @@ class MarineSpeciesQuery:
             """
             
             # 初始化SQL生成器
-            sql_generator = SQLGenerator()
+            sql_generator = SQLGenerator(self.lm)
             
             # 生成SQL
-            result = sql_generator(natural_language_query, db_schema_enriched + "\n" + location_usage_hint)
+            result = sql_generator.forward(query=natural_language_query, db_schema=db_schema_str + "\n" + location_usage_hint)
             
             # 清理SQL，移除Markdown代码块标记
             sql = result.sql
@@ -202,11 +204,10 @@ class MarineSpeciesQuery:
                 output.append(row_str)
         
         return "\n".join(output)
-    
 
 if __name__ == "__main__":
     # 直接使用查询处理器示例
     query_processor = MarineSpeciesQuery("marine_species.db")
     result = query_processor.query_database("分布在东海的盲鳗科哪些生物?有多少？")
     formatted_result = query_processor.format_query_results(result)
-    print(formatted_result)
+    print(formatted_result) 

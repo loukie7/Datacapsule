@@ -3,17 +3,28 @@ import numpy as np
 from openai import OpenAI
 from loguru import logger
 import networkx as nx
-import dspy
 from typing import List
 from nanovector_db import NanoVectorDB
+from dotenv import load_dotenv
 
+# 加载环境变量
+load_dotenv(override=True)
 
 MAX_BATCH_SIZE = os.getenv("MAX_BATCH_SIZE")
 VECTOR_SEARCH_TOP_K = int(os.getenv("VECTOR_SEARCH_TOP_K","3"))
 BETTER_THAN_THRESHOLD =  float(os.getenv("BETTER_THAN_THRESHOLD","0.7"))
-WORKING_DIR =os.getenv("RAG_DIR","graph_data")
+WORKING_DIR = os.getenv("RAG_DIR","graph_data")
 
-client = OpenAI(base_url=os.getenv("EMBEDDING_MODEL_BASE_URL"),api_key=os.getenv("EMBEDDING_MODEL_API_KEY"),)
+# 安全地创建OpenAI客户端
+embedding_base_url = os.getenv("EMBEDDING_MODEL_BASE_URL")
+embedding_api_key = os.getenv("EMBEDDING_MODEL_API_KEY")
+
+if embedding_base_url and embedding_api_key:
+    client = OpenAI(base_url=embedding_base_url, api_key=embedding_api_key)
+    logger.info("OpenAI embedding客户端初始化成功")
+else:
+    logger.warning("embedding模型配置不完整，将在需要时重新初始化")
+    client = None
 
 # 定义节点类型的层级顺序
 NODE_HIERARCHY = {
@@ -42,16 +53,32 @@ NODE_HIERARCHY = {
 class ReActTools:
     def __init__(self):
         logger.info("ReActTools initialized")
-        GRAPHML_DIR = os.getenv("GRAPHML_DIR","graph_chunk_entity_relation_clean.graphml")
+        # 修复默认路径，指向正确的图数据文件位置
+        GRAPHML_DIR = os.getenv("GRAPHML_DIR","graph_data_new/graph_entity_relation_detailed.graphml")
         logger.info("init-ReActTools")
-        logger.info(f"{WORKING_DIR}/{GRAPHML_DIR}")
-        if os.path.exists(f"{WORKING_DIR}/{GRAPHML_DIR}"):
-            self.nx = nx.read_graphml(f"{WORKING_DIR}/{GRAPHML_DIR}")
+        logger.info(f"尝试加载图数据文件: {GRAPHML_DIR}")
+        
+        if os.path.exists(GRAPHML_DIR):
+            logger.info(f"图数据文件存在，开始加载: {GRAPHML_DIR}")
+            self.nx = nx.read_graphml(GRAPHML_DIR)
+            logger.info(f"图数据加载成功: 节点数={self.nx.number_of_nodes()}, 边数={self.nx.number_of_edges()}")
+        else:
+            logger.error(f"图数据文件不存在: {GRAPHML_DIR}")
+            # 尝试备用路径
+            backup_path = "graph_data_new/graph_entity_relation_detailed.graphml"
+            if os.path.exists(backup_path):
+                logger.info(f"使用备用路径加载图数据: {backup_path}")
+                self.nx = nx.read_graphml(backup_path)
+                logger.info(f"备用路径图数据加载成功: 节点数={self.nx.number_of_nodes()}, 边数={self.nx.number_of_edges()}")
+            else:
+                logger.error(f"备用路径也不存在: {backup_path}")
+                # 创建一个空图以避免错误
+                self.nx = nx.DiGraph()
         
         # 判断是否正确加载到网络图
-        if self.nx and self.nx.number_of_nodes() >0:
+        if self.nx and self.nx.number_of_nodes() > 0:
             logger.info(f"NetworkX graph loaded successfully! have nodes: {self.nx.number_of_nodes()}")
-            self.nx_nodes=self.nx.nodes(data=True)
+            self.nx_nodes = self.nx.nodes(data=True)
             self.entity_type_map = {}
             for node in self.nx_nodes:
                 item = node[1]
@@ -63,19 +90,44 @@ class ReActTools:
                     self.entity_type_map[entity_type][id] = item
                 else:
                     logger.warning(f"Warning: Node {id} missing node_type attribute")
+            
+            # 统计各类型节点数量
+            node_type_counts = {}
+            for node_type in self.entity_type_map:
+                node_type_counts[node_type] = len(self.entity_type_map[node_type])
+            logger.info(f"节点类型统计: {node_type_counts}")
+            
         else:
-            logger.error("NetworkX graph is empty!")
+            logger.error("NetworkX graph is empty or failed to load!")
 
-        self.dim = int(os.getenv("EMBEDDING_DIM",1536))
+        self.dim = int(os.getenv("EMBEDDING_DIM", 1536))
         self.vectorizer = GraphVectorizer(WORKING_DIR)
        
-    def openai_embedding_function(self,texts: List[str]):
+    def openai_embedding_function(self, texts: List[str]):
+        """获取文本的嵌入向量"""
+        global client
         
-        response = client.embeddings.create(
-            input=texts,
-            model=os.getenv("EMBEDDING_MODEL")
-        )
-        return [x.embedding for x in response.data]
+        # 如果客户端未初始化，尝试重新初始化
+        if client is None:
+            embedding_base_url = os.getenv("EMBEDDING_MODEL_BASE_URL")
+            embedding_api_key = os.getenv("EMBEDDING_MODEL_API_KEY")
+            
+            if embedding_base_url and embedding_api_key:
+                client = OpenAI(base_url=embedding_base_url, api_key=embedding_api_key)
+                logger.info("重新初始化OpenAI embedding客户端成功")
+            else:
+                logger.error("embedding模型配置不完整，无法获取向量")
+                return [[0.0] * self.dim for _ in texts]  # 返回零向量
+        
+        try:
+            response = client.embeddings.create(
+                input=texts,
+                model=os.getenv("EMBEDDING_MODEL")
+            )
+            return [x.embedding for x in response.data]
+        except Exception as e:
+            logger.error(f"获取embedding向量失败: {str(e)}")
+            return [[0.0] * self.dim for _ in texts]  # 返回零向量
     
     def find_nodes_by_node_type(self,start_node,attr_name):
         '''
@@ -224,12 +276,30 @@ class GraphVectorizer:
     
     def _get_embedding(self, text: str) -> list[float]:
         """获取文本的向量表示"""
-        response = client.embeddings.create(
-            model=os.getenv("EMBEDDING_MODEL"),
-            input=text,
-            encoding_format="float"
-        )
-        return response.data[0].embedding
+        global client
+        
+        # 如果客户端未初始化，尝试重新初始化
+        if client is None:
+            embedding_base_url = os.getenv("EMBEDDING_MODEL_BASE_URL")
+            embedding_api_key = os.getenv("EMBEDDING_MODEL_API_KEY")
+            
+            if embedding_base_url and embedding_api_key:
+                client = OpenAI(base_url=embedding_base_url, api_key=embedding_api_key)
+                logger.info("重新初始化OpenAI embedding客户端成功")
+            else:
+                logger.error("embedding模型配置不完整，无法获取向量")
+                return [0.0] * int(os.getenv("EMBEDDING_DIM", "1536"))  # 返回零向量
+        
+        try:
+            response = client.embeddings.create(
+                model=os.getenv("EMBEDDING_MODEL"),
+                input=text,
+                encoding_format="float"
+            )
+            return response.data[0].embedding
+        except Exception as e:
+            logger.error(f"获取embedding向量失败: {str(e)}")
+            return [0.0] * int(os.getenv("EMBEDDING_DIM", "1536"))  # 返回零向量
     
     def vectorize_graph(self, graph_file: str):
         """将知识图谱中的实体和关系向量化并存储
@@ -325,3 +395,82 @@ class GraphVectorizer:
         # 按相似度排序
         results.sort(key=lambda x: x['similarity'], reverse=True)
         return results[:top_k]
+
+class Agent:
+    """简单的Agent类，包含React模型、工具和签名"""
+    
+    def __init__(self, react_model, tools, signature):
+        self.react_model = react_model
+        self.tools = tools
+        self.signature = signature
+
+def get_agent(agent_name: str = "default"):
+    """获取指定名称的Agent实例"""
+    try:
+        if agent_name == "default":
+            # 创建默认的海洋生物知识查询Agent
+            from miniReact import ReAct
+            from signatures import MarineBiologyKnowledgeQueryAnswer
+            from tools import InferenceTools
+            from core.llm_manager import get_inference_manager
+            import os
+            from dotenv import load_dotenv
+            
+            # 确保环境变量已加载
+            load_dotenv(override=True)
+            
+            # 直接使用miniReact原生LM，因为它已经经过测试可以正常工作
+            from miniReact import LM
+            logger.info("使用miniReact原生LM管理器")
+            
+            llm_manager = LM(
+                model_name=os.getenv('LLM_MODEL', 'gpt-3.5-turbo'),
+                api_base=os.getenv('BASE_URL', 'https://api.openai.com/v1'),
+                api_key=os.getenv('API_KEY')
+            )
+            
+            logger.info(f"使用模型: {llm_manager.model_name}")
+            
+            # 创建工具实例
+            tools_instance = InferenceTools()
+            
+            # 将工具实例的方法转换为工具函数列表
+            tools_list = [
+                tools_instance.find_nodes_by_node_type,
+                tools_instance.batch_find_nodes_by_node_type,
+                tools_instance.get_unique_vector_query_results,
+                tools_instance.get_node_attribute,
+                tools_instance.get_adjacent_node_descriptions,
+                tools_instance.nodes_count,
+                tools_instance.marine_species_query
+            ]
+            
+            # 创建React模型 - 使用统一LLM管理器
+            try:
+                react_model = ReAct(
+                    signature=MarineBiologyKnowledgeQueryAnswer,
+                    tools=tools_list,
+                    max_iters=10,
+                    lm=llm_manager
+                )
+                logger.info(f"ReAct模型创建成功，工具数量: {len(tools_list)}")
+            except Exception as e:
+                logger.error(f"ReAct模型创建失败: {e}")
+                raise
+            
+            # 创建Agent实例
+            agent = Agent(
+                react_model=react_model,
+                tools=tools_list,
+                signature=MarineBiologyKnowledgeQueryAnswer
+            )
+            
+            logger.info(f"Agent '{agent_name}' 创建成功，使用模型: {getattr(llm_manager, 'model_name', 'unknown')}")
+            return agent
+        else:
+            logger.error(f"未知的Agent名称: {agent_name}")
+            return None
+            
+    except Exception as e:
+        logger.error(f"创建Agent '{agent_name}' 时发生错误: {str(e)}")
+        return None

@@ -81,7 +81,7 @@ mammoth==1.9.0
 markdownify==1.0.0
 markitdown==0.0.1a4
 MarkupSafe==3.0.2
-matplotlib-inline==0.1.7
+matplotlib-inline==0.1
 msal==1.31.1
 msal-extensions==1.2.0
 multidict==6.1.0
@@ -166,3 +166,6 @@ xxhash==3.5.0
 yarl==1.18.3
 youtube-transcript-api==0.6.3
 zipp==3.21.0
+sse-starlette
+asyncio
+git+https://github.com/cottagephilosopher/mini-react.git
