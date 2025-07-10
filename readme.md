@@ -136,8 +136,10 @@ VECTOR_SEARCH_TOP_K=3
 python main.py
 ```
 
-### 5. Frontend Setup
-For frontend setup, please visit the [Datacapsule WebUI Repository](https://github.com/loukie7/Datacapsule-webui).
+### 5. Front-end Setup
+
+For front-end setup, please visit the [Datacapsule-admin-webui repository](https://github.com/loukie7/Datacapsule-admin-webui).  
+> **Note:** The current front-end repository, **Datacapsule-admin-webui**, is intended to help users quickly explore Datacapsule and its core features. It is **not** a production end-user interface; feel free to customize and extend it as needed.
 
 ---
 
