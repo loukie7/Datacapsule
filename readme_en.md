@@ -138,7 +138,9 @@ python main.py
 ```
 
 ### 5. 前端设置
-前端设置请访问[Datacapsule WebUI仓库](https://github.com/loukie7/Datacapsule-webui)。
+
+前端设置请访问 [Datacapsule-admin-webui仓库](https://github.com/loukie7/Datacapsule-admin-webui)。  
+> **注**：目前的前端仓库为 **Datacapsule-admin-webui**，旨在帮助用户快速体验 Datacapsule 及其核心功能，并非用户界面，支持自定义二次开发。
 
 ---
 
