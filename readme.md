@@ -91,7 +91,7 @@ Datacapsule is an advanced knowledge graph-based multi-path retrieval solution t
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.8+
+- Python 3.11+
 - Node.js 16+
 - Git
 
