@@ -14,7 +14,7 @@
   
   <br>
   
-  <img src="https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/Python-3.11+-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
   <img src="https://img.shields.io/badge/FastAPI-green?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
   <img src="https://img.shields.io/badge/React-18+-blue?style=for-the-badge&logo=react&logoColor=white" alt="React" />
   <img src="https://img.shields.io/badge/TypeScript-blue?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
@@ -65,7 +65,7 @@ Datacapsule is an advanced knowledge graph-based multi-path retrieval solution t
 - **Database**: SQLite + NanoVector + NetworkX
 - **AI Integration**: Mini-React + Standard OpenAI Protocol
 - **Communication**: SSE (Server-Sent Events)
-- **Languages**: Python 3.8+
+- **Languages**: Python 3.11+
 
 #### Frontend
 - **Framework**: React 18 + Vite
