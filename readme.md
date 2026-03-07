@@ -283,7 +283,7 @@ We welcome contributions! Please contact us for guidance.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
 
 ---
 
@@ -294,6 +294,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Project Core Contributors**: Loukie7、Alex—鹏哥
 
 If you are interested in the project, you can scan the code to add friends. A product communication group will be established later.
+
+coming soon！
 
 <div align="center">
   <img src="./images/二维码.jpg" alt="WeChat QR Code" width="200" />
